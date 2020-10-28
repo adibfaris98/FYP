@@ -23,7 +23,6 @@ export default function Home({ navigation }) {
                                 style={styles.sliderImage}
                             />
                         </View>
-                        {/* test */}
                         <View>
                             <Image
                                 source={require('../assets/pexels-football-wife-1618200.jpg')}
