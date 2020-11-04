@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Home from './Home'
-import Notification from './Notification'
+import Notification from './NotificationScreen'
 import Profile from './Profile'
 import Tournament from './Tournament'
 import CardListScreen from './CardListScreen';
