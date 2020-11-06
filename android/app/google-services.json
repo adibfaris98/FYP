@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "516883653948",
+    "firebase_url": "https://sports-management-system-v2.firebaseio.com",
+    "project_id": "sports-management-system-v2",
+    "storage_bucket": "sports-management-system-v2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516883653948:android:8128f230095292057cea39",
+        "android_client_info": {
+          "package_name": "com.fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "516883653948-ge8ggp250rgf2phs2ccq0f98jgniaoif.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvuehND4it5Wdiap47ILe6og50xq7kkz0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "516883653948-ge8ggp250rgf2phs2ccq0f98jgniaoif.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

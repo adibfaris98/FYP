@@ -15,10 +15,17 @@ import CardListScreen from './CardListScreen';
 import CardItemDetails from './CardItemDetails';
 import EditProfileScreen from './EditProfileScreen';
 
+import TeamRegisterScreen from './TeamRegisterScreen'
+import ManagerRegisterScreen from './ManagerRegisterScreen'
+import PlayerRegisterScreen from './PlayerRegisterScreen'
+import LoginScreen from './LoginScreen';
+
 const HomeStack = createStackNavigator();
 const TournamentStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
+
+const RegisterStack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
@@ -126,6 +133,13 @@ const HomeStackScreen = ({ navigation }) => {
                 }}
             />
             <HomeStack.Screen
+                name="LoginScreen"
+                component={LoginScreen}
+                options={({ route }) => ({
+                    title: route.params.title
+                })}
+            />
+            <HomeStack.Screen
                 name="CardListScreen"
                 component={CardListScreen}
                 options={({ route }) => ({
@@ -141,6 +155,13 @@ const HomeStackScreen = ({ navigation }) => {
                     headerTitle: false,
                     headerTransparent: true,
                     headerTintColor: '#fff'
+                })}
+            />
+            <HomeStack.Screen
+                name="RegisterScreen"
+                component={RegisterStackScreen}
+                options={() => ({
+                    title: 'Team Registration'
                 })}
             />
 
@@ -165,6 +186,7 @@ const TournamentStackScreen = ({ navigation }) => {
                 name="Tournament"
                 component={Tournament}
                 options={{
+                    title: "My Tournament",
                     headerLeft: () => (
                         <MaterialCommunityIcons.Button
                             color='#333'
@@ -253,4 +275,33 @@ const ProfileStackScreen = ({ navigation }) => {
             />
         </ProfileStack.Navigator>
     )
+}
+
+const RegisterStackScreen = ({ navigation }) => {
+    return (
+        <RegisterStack.Navigator>
+            <RegisterStack.Screen
+                name="TeamRegisterScreen"
+                component={TeamRegisterScreen}
+                options={{
+                    title: 'Team Register'
+                }}
+            />
+            <RegisterStack.Screen
+                name="ManagerRegisterScreen"
+                component={ManagerRegisterScreen}
+                options={{
+                    title: 'Manager Register'
+                }}
+            />
+            <RegisterStack.Screen
+                name="PlayerRegisterScreen"
+                component={PlayerRegisterScreen}
+                options={{
+                    title: 'Player Register'
+                }}
+            />
+        </RegisterStack.Navigator>
+    )
+
 }

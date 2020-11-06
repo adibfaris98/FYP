@@ -1,13 +1,12 @@
 import React, { useRef } from 'react'
-import { View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert, TouchableOpacity } from 'react-native'
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import * as Animatable from 'react-native-animatable'
 const MIN_HEIGHT = Platform.OS == 'ios' ? 90 : 55
 const MAX_HEIGHT = 300
 
-export default function CardItemDetails({ route }) {
+export default function CardItemDetails({ route, navigation }) {
     const itemData = route.params.itemData
     const navTitleView = useRef(null)
 
@@ -36,8 +35,8 @@ export default function CardItemDetails({ route }) {
             >
                 {/* Overview & Description */}
                 <TriggeringView style={styles.section}
-                    onHide={()=> navTitleView.current.fadeInUp(200)}
-                    onDisplay={()=> navTitleView.current.fadeOut(100)}
+                    onHide={() => navTitleView.current.fadeInUp(200)}
+                    onDisplay={() => navTitleView.current.fadeOut(100)}
                 >
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.title}>Overview</Text>
@@ -59,7 +58,7 @@ export default function CardItemDetails({ route }) {
                             <Button
                                 title='Register here'
                                 color='#6B46C1'
-                                onPress={() => Alert.alert('Button clicked')}
+                                onPress={() => navigation.navigate('RegisterScreen')}
                                 style={{ marginHorizontal: 2 }} />
                         </View>
                     </View>

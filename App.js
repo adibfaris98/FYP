@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+// import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
@@ -14,6 +14,7 @@ import React from 'react';
 
 import MainTabScreen from "./app/screens/MainTabsScreen"
 import DrawerContent from './app/screens/DrawerContent'
+import AppStack from './app/navigation/AppStack'
 
 import {
   SafeAreaView,
@@ -27,16 +28,19 @@ import {
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
+import AuthStack from './app/navigation/AuthStack';
+import Providers from './app/navigation';
 
 const Drawer = createDrawerNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-        <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
-      </Drawer.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+    //     <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
+    //   </Drawer.Navigator>
+    // </NavigationContainer>
+    <Providers/>
   )
 };
 
