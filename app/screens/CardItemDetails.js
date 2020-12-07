@@ -1,15 +1,34 @@
-import React, { useRef } from 'react'
-import { View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert, TouchableOpacity } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { TextInput, View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert, TouchableOpacity, TouchableHighlight, Modal } from 'react-native'
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { useForm, Controller } from "react-hook-form";
+import auth from '@react-native-firebase/auth'
+import axios from 'axios'
 import * as Animatable from 'react-native-animatable'
+
 const MIN_HEIGHT = Platform.OS == 'ios' ? 90 : 55
 const MAX_HEIGHT = 300
 
 export default function CardItemDetails({ route, navigation }) {
     const itemData = route.params.itemData
+    const currentUser = auth().currentUser.uid;
     const navTitleView = useRef(null)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [teamName, setTeamName] = useState(null)
 
+    const submitTeam = async () => {
+        try {
+            const res = await axios.post('/team',
+                {
+                    tournamentID: itemData.tournamentID,
+                    teamName: teamName,
+                    uid: currentUser
+                })
+            console.log(res + "submit team")
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={styles.container}>
             <StatusBar barStyle='light-content' />
@@ -20,7 +39,11 @@ export default function CardItemDetails({ route, navigation }) {
                 maxOverlayOpacity={0.6}
                 minOverlayOpacity={0.3}
                 renderHeader={() => (
-                    <Image source={itemData.image} style={styles.image} />
+                    <Image
+                        source={{
+                            uri: itemData.photoURL
+                        }}
+                        style={styles.image} />
                 )}
                 renderForeground={() => (
                     <View style={styles.titleContainer}>
@@ -41,27 +64,55 @@ export default function CardItemDetails({ route, navigation }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.title}>Overview</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                            <FontAwesome name='star' size={16} color='#6B46C1' />
+                            {/* <FontAwesome name='star' size={16} color='#6B46C1' />
                             <Text style={{ marginHorizontal: 2 }}>{itemData.rating}</Text>
-                            <Text>({itemData.reviews})</Text>
+                            <Text>({itemData.reviews})</Text> */}
+                            <Button
+                                title='Register here'
+                                color='#6B46C1'
+                                onPress={() => {
+                                    // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
+                                    setModalVisible(true)
+                                    console.log(itemData)
+                                }}
+                                style={{ marginHorizontal: 2 }} />
                         </View>
                     </View>
                 </TriggeringView>
                 <View style={[styles.section, styles.sectionLarge]}>
                     <Text style={styles.sectionContent}>{itemData.description}</Text>
+                    <Text style={styles.sectionContent}>Sport Type : {itemData.sportType}</Text>
+                    <Text style={styles.sectionContent}>Venue : {itemData.location}</Text>
+                    <Text style={styles.sectionContent}>Number Of Team : {itemData.participants}</Text>
+                    <Text style={styles.sectionContent}>Date : {itemData.startDate} to {itemData.endDate}</Text>
+                    <Text style={styles.sectionContent}>Gender : {itemData.gender}</Text>
                 </View>
 
                 <View style={styles.section}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.title}>Rules & Regulation</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                            <Button
-                                title='Register here'
-                                color='#6B46C1'
-                                onPress={() => navigation.navigate('RegisterScreen')}
-                                style={{ marginHorizontal: 2 }} />
-                        </View>
+                        <Text style={styles.title}>Participants</Text>
                     </View>
+                </View>
+                <View style={[styles.section, styles.sectionLarge]}>
+
+                </View>
+
+                <View style={styles.section}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={styles.title}>Final Stage</Text>
+                    </View>
+                </View>
+                <View style={[styles.section, { height: 250 }]}>
+
+                </View>
+
+                <View style={styles.section}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={styles.title}>Group Stage</Text>
+                    </View>
+                </View>
+                <View style={[styles.section, { height: 250 }]}>
+
                 </View>
 
                 {/* categories  */}
@@ -76,16 +127,55 @@ export default function CardItemDetails({ route, navigation }) {
                     </View>
                     
                 </View> */}
-
-                <View style={[styles.section, { height: 250 }]}>
-
-                </View>
-                {/* <View style={[styles.section, { height: 250 }]}>
-
-                </View> */}
             </HeaderImageScrollView>
 
+            <View>
+                <Modal
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                    }}
+                >
+                    <View style={styles.view}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.title}>Team Information</Text>
+                            <TextInput
+                                value={teamName}
+                                onChangeText={(teamName) => setTeamName(teamName)}
+                                placeholder="Team Name"
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                            />
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                                <TouchableOpacity
+                                    style={{ ...styles.openButton, backgroundColor: "green" }}
+                                    onPress={() => {
+                                        submitTeam()
+                                        setModalVisible(!modalVisible);
+                                        navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>SAVE</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{ ...styles.openButton, backgroundColor: "red" }}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>CANCEL</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            </View>
+
         </View>
+
+
 
     )
 }
@@ -163,6 +253,41 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     sectionLarge: {
-        minHeight: 300,
+        minHeight: 200,
     },
+    view: {
+        backgroundColor: "rgba(0,0,0,0.5)",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    openButton: {
+        backgroundColor: "#115454",
+        borderRadius: 5,
+        padding: 15,
+        elevation: 2
+    },
+    textStyle: {
+        color: "white",
+        textAlign: "center",
+    },
+    modalText: {
+        marginBottom: 15,
+    }
 });

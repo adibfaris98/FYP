@@ -1,19 +1,75 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker, ScrollView, Modal } from 'react-native'
 import { Avatar } from 'react-native-paper'
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Foundation from 'react-native-vector-icons/Foundation'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
 import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
+import RNPickerSelect from 'react-native-picker-select';
+import { DataTable } from 'react-native-paper'
+import axios from 'axios'
+import auth from '@react-native-firebase/auth'
 
+export default function TeamRegisterScreen({ route, navigation }) {
+    const currentUser = auth().currentUser.uid;
+    const { tournamentID } = route.params.itemData
+    let i = 0;
 
-export default function TeamRegisterScreen({ navigation }) {
+    const [modalVisible, setModalVisible] = useState(false)
+    const [listPlayers, setListPlayers] = useState([])
+    const [teamName, setTeamName] = useState(null)
 
-    const [image, setImage] = useState('https://api.adorable.io/avatars/50/abott@adorable.png')
+    const [passportPhoto, setPassportPhoto] = useState(null)
+    const [name, setName] = useState(null)
+    const [numMatric, setNumMatric] = useState(null)
+    const [identificationID, setIdentificationID] = useState(null)
+    const [address, setAddress] = useState(null)
+    const [numAthelete, setNumAthelete] = useState(null)
+    const [phoneNumber, setPhoneNum] = useState(null)
+    const [gender, setGender] = useState(null)
+
+    useEffect(() => {
+        const getTeam = async () => {
+            try {
+                const response = await axios.get(`/${tournamentID}/${currentUser}/team`)
+                // const { teamName, listPlayers } = response.data
+                setTeamName(response.data.teamName)
+                setListPlayers(response.data.listPlayers)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        getTeam()
+        console.log(listPlayers)
+        console.log(teamName)
+    }, [])
+
+    const addPlayer = async() => {
+        try {
+            const response = await axios.post(`/${tournamentID}/${currentUser}/player`,
+            {
+                playerDetails: {
+                    address,
+                    gender,
+                    identificationID,
+                    name,
+                    numAthelete,
+                    numMatric,
+                    passportPhoto,
+                    phoneNumber
+                }
+            })
+        } catch (error) {
+            
+        }
+    }
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -22,8 +78,8 @@ export default function TeamRegisterScreen({ navigation }) {
             cropping: true,
             compressImageQuality: 0.7
         }).then(image => {
-            console.log(image);
-            setImage(image.path)
+            // console.log(image);
+            setPassportPhoto(image.path)
             bs.current.snapTo(1)
         });
     }
@@ -35,8 +91,8 @@ export default function TeamRegisterScreen({ navigation }) {
             cropping: true,
             compressImageQuality: 0.7
         }).then(image => {
-            console.log(image);
-            setImage(image.path)
+            // console.log(image);
+            setPassportPhoto(image.path)
             bs.current.snapTo(1)
         });
     }
@@ -67,119 +123,196 @@ export default function TeamRegisterScreen({ navigation }) {
         </View>
     );
 
-    bs = React.createRef()
-    fall = new Animated.Value(1)
+    const bs = React.createRef()
+    const fall = new Animated.Value(1)
     return (
         <View style={styles.container}>
-            <BottomSheet
-                ref={bs}
-                snapPoints={[330, 0]}
-                renderContent={renderInner}
-                renderHeader={renderHeader}
-                initialSnap={1}
-                callbackNode={fall}
-                enabledGestureInteraction={true}
-            />
-            <Animated.View style={{ margin: 20, opacity: Animated.add(0.3, Animated.multiply(fall, 1.0)) }}>
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
-                        <View style={{
-                            height: 100,
-                            width: 100,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <ImageBackground
-                                source={{
-                                    uri: image,
-                                }}
-                                style={{ height: 100, width: 100 }}
-                                imageStyle={{ borderRadius: 15 }}
-                            >
-                                <View style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Icon
-                                        name="camera"
-                                        size={35}
-                                        color="#fff"
-                                        style={{
-                                            opacity: 0.7,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderWidth: 1,
-                                            borderColor: '#fff',
-                                            borderRadius: 10
-                                        }}
-                                    />
+            <Text style={styles.title}>Team Information</Text>
 
-                                </View>
-
-                            </ImageBackground>
-
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>John Doe</Text>
-
-                    <View style={styles.action}>
-                        <FontAwesome name="user-o" size={20} />
-                        <TextInput
-                            placeholder="Team Name"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="envelope-o" size={20} />
-                        <TextInput
-                            placeholder="Email"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-
-                    <View style={styles.action}>
-                        <Foundation name="male-female" size={20} />
-                        <TextInput
-                            placeholder="Gender"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-
-                    <View style={styles.action}>
-                        <Feather name="phone" size={20} />
-                        <TextInput
-                            placeholder="Phone"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-
-                    <View style={styles.action}>
-                        <FontAwesome name="globe" size={20} />
-                        <TextInput
-                            placeholder="Country"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-
-                </View>
-                <TouchableOpacity style={styles.commandButton} onPress={() => { navigation.navigate('ManagerRegisterScreen') }}>
-                    <Text style={styles.panelButtonTitle}>
-                        Next
-                        </Text>
+            <View style={styles.action}>
+                <Text > Team Name : {teamName}</Text>
+                <TouchableOpacity>
+                    <Icon name="square-edit-outline" size={25} />
                 </TouchableOpacity>
-            </Animated.View>
+            </View>
+
+            <DataTable>
+                <DataTable.Header>
+                    <DataTable.Title>No.</DataTable.Title>
+                    <DataTable.Title>Player Name</DataTable.Title>
+                    <DataTable.Title >IC No.</DataTable.Title>
+                    <DataTable.Title >Matric No.</DataTable.Title>
+                </DataTable.Header>
+
+                {listPlayers.map(item => (
+                    <TouchableOpacity key={item.identificationID}>
+                        <DataTable.Row>
+                            <DataTable.Cell >{i++}</DataTable.Cell>
+                            <DataTable.Cell>{item.name}</DataTable.Cell>
+                            <DataTable.Cell >{item.identificationID}</DataTable.Cell>
+                            <DataTable.Cell >{item.numMatric}</DataTable.Cell>
+                        </DataTable.Row>
+                    </TouchableOpacity>
+        
+                ))
+                }
+
+                <TouchableOpacity
+                    style={{ alignItems: "center" }}
+                    onPress={() => {
+                        setModalVisible(true)
+                    }}>
+                    <MaterialIcons name="add-circle-outline" size={25} />
+                </TouchableOpacity>
+
+                <View>
+                    <Modal
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                        }}
+                    >
+                        <BottomSheet
+                            ref={bs}
+                            snapPoints={[330, 0]}
+                            renderContent={renderInner}
+                            renderHeader={renderHeader}
+                            initialSnap={1}
+                            callbackNode={fall}
+                            enabledGestureInteraction={true}
+                        />
+                        <View style={styles.view}>
+                            <View style={styles.modalView}>
+
+                                <Text style={styles.title}>Player Information</Text>
+
+                                <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
+                                    <View style={{
+                                        height: 100,
+                                        width: 100,
+                                        borderRadius: 15,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <ImageBackground
+                                            source={{
+                                                uri: passportPhoto,
+                                            }}
+                                            style={{ height: 100, width: 100 }}
+                                            imageStyle={{ borderRadius: 15 }}
+                                        >
+                                            <View style={{
+                                                flex: 1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+                                                <Icon
+                                                    name="camera"
+                                                    size={35}
+                                                    color="#666666"
+                                                    style={{
+                                                        opacity: 0.7,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderWidth: 1,
+                                                        borderColor: '#666666',
+                                                        borderRadius: 10
+                                                    }}
+                                                />
+                                            </View>
+                                        </ImageBackground>
+
+                                    </View>
+                                </TouchableOpacity>
+
+                                <TextInput
+                                    value={name}
+                                    onChangeText={(name) => setName(name)}
+                                    placeholder="Name"
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <TextInput
+                                    value={address}
+                                    onChangeText={(address) => setAddress(address)}
+                                    placeholder="Address"
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <TextInput
+                                    value={identificationID}
+                                    onChangeText={(identificationID) => setIdentificationID(identificationID)}
+                                    placeholder="IC No."
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <TextInput
+                                    value={numMatric}
+                                    onChangeText={(numMatric) => setNumMatric(numMatric)}
+                                    placeholder="Matric No."
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <TextInput
+                                    value={numAthelete}
+                                    onChangeText={(numAthelete) => setNumAthelete(numAthelete)}
+                                    placeholder="Athlete No."
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <TextInput
+                                    value={phoneNumber}
+                                    onChangeText={(phoneNumber) => setPhoneNum(phoneNumber)}
+                                    placeholder="Phone No."
+                                    placeholderTextColor="#666666"
+                                    autoCorrect={false}
+                                />
+                                <RNPickerSelect
+                                    value={gender}
+                                    onValueChange={(gender) => setGender(gender)}
+                                    items={[
+                                        { label: 'Male', value: 'male' },
+                                        { label: 'Female', value: 'female' }
+                                    ]}
+                                    placeholder={{ label: "Select your gender ...", value: "null" }}
+                                />
+                                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        style={{ ...styles.openButton, backgroundColor: "green" }}
+                                        onPress={() => {
+                                            addPlayer()
+                                            getTeam()
+                                            setModalVisible(!modalVisible);
+                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                        }}
+                                    >
+                                        <Text style={styles.textStyle}>ADD</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{ ...styles.openButton, backgroundColor: "red" }}
+                                        onPress={() => {
+                                            setModalVisible(!modalVisible);
+                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                        }}
+                                    >
+                                        <Text style={styles.textStyle}>CANCEL</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+
+                <DataTable.Pagination
+                    page={1}
+                    numberOfPages={3}
+                    onPageChange={page => {
+                        console.log(page);
+                    }}
+                    label="1-2 of 6"
+                />
+            </DataTable>
         </View>
     )
 }
@@ -275,4 +408,54 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         color: '#05375a',
     },
+    section: {
+        // padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#cccccc',
+        backgroundColor: 'white',
+    },
+    title: {
+        fontSize: 20,
+    },
+    section: {
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#cccccc',
+        backgroundColor: 'white',
+    },
+    view: {
+        backgroundColor: "rgba(0,0,0,0.5)",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    openButton: {
+        backgroundColor: "#115454",
+        borderRadius: 5,
+        padding: 15,
+        elevation: 2
+    },
+    textStyle: {
+        color: "white",
+        textAlign: "center",
+    },
+    modalText: {
+        marginBottom: 15,
+    }
 });

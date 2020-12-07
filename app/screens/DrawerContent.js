@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Avatar, Caption, Drawer, Paragraph, Title } from 'react-native-paper'
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
@@ -6,9 +6,34 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Entypo from 'react-native-vector-icons/Entypo'
 import { AuthContext } from '../navigation/AuthProvider'
 
+import auth from '@react-native-firebase/auth'
+import axios from 'axios'
+
 export default function DrawerContent(props) {
-    const{user, logout} = useContext (AuthContext)
+   
+    const { user, logout, name, email, photoURL} = useContext(AuthContext)
+
+    const userAuth = auth().currentUser;
+    // const [name, setName] = useState()
+    // const [email, setEmail] = useState()
+
+    // useEffect(() => {
+    //     async function main() {
+    //         try {
+    //             const {data} = await axios.get(`/user/${userAuth.uid}`)
+    //             setName(data.name)
+    //             setEmail(data.email)
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
+    //     main()
+    // }, [userAuth,email,name])
+
+
+
     return (
+        
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
@@ -17,16 +42,16 @@ export default function DrawerContent(props) {
                         <View>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                    uri: photoURL
                                 }}
                                 size={45}
                             />
                             <View>
                                 <Title style={styles.title}>
-                                    Salim
+                                    {name}
                                 </Title>
                                 <Caption>
-                                    @salimman
+                                    {email}
                                 </Caption>
                             </View>
                         </View>

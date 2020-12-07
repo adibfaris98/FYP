@@ -6,6 +6,7 @@ import FormInput from '../components/FormInput'
 import { AuthContext } from '../navigation/AuthProvider'
 
 export default function SignupScreen({ navigation }) {
+    const [name, setName] = useState()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [confirmPassword, setConfirmPassword] = useState()
@@ -16,10 +17,18 @@ export default function SignupScreen({ navigation }) {
         <View style={styles.container}>
             <Text style={styles.text}>Create an account</Text>
             <FormInput
+                labelValue={name}
+                onChangeText={(name) => setName(name)}
+                placeholderText="Name"
+                iconType="user"
+                keyboardType="default"
+                autoCorrect={false}
+            />
+            <FormInput
                 labelValue={email}
                 onChangeText={(userEmail) => setEmail(userEmail)}
                 placeholderText="Email"
-                iconType="user"
+                iconType="mail"
                 keyboardType="email-address"
                 autoCorrect={false}
             />
@@ -32,14 +41,14 @@ export default function SignupScreen({ navigation }) {
             />
             <FormInput
                 labelValue={confirmPassword}
-                onChangeText={(userPassword) => setPassword(userPassword)}
+                onChangeText={(userPassword) => setConfirmPassword(userPassword)}
                 placeholderText="Confirm Password"
                 iconType="lock"
                 secureTextEntry={true}
             />
             <FormButton
                 buttonTitle="Sign Up"
-                onPress={() => register(email, password)}
+                onPress={() => register(email, password, name)}
             />
 
             <View style={styles.textPrivate}>
@@ -58,12 +67,6 @@ export default function SignupScreen({ navigation }) {
             <TouchableOpacity style={styles.forgotButton} onPress={() => { navigation.navigate('Login') }}>
                 <Text style={styles.navButtonText}>Have an account? Sign In</Text>
             </TouchableOpacity>
-
-
-
-
-
-
 
         </View>
     )

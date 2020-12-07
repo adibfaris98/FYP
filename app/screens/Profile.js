@@ -1,17 +1,46 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
 import { Avatar, Caption, Title, TouchableRipple } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import auth from '@react-native-firebase/auth'
+import axios from 'axios'
+import { AuthContext } from '../navigation/AuthProvider'
 
 export default function Profile() {
+    const userAuth = auth().currentUser;
+
+    const {name,email,about,country,phoneNumber,photoURL} = useContext(AuthContext)
+    // ,setName,setEmail,setAbout,setCountry,setPhoneNumber,userDetails
+    // const [name, setName] = useState()
+    // const [email, setEmail] = useState()
+    // const [about, setAbout] = useState()
+    // const [country, setCountry] = useState()
+    // const [phoneNumber, setPhoneNumber] = useState()
+
+    // useEffect(() => {
+    //     async function main() {
+    //         try {
+    //             const { data } = await axios.get(`/user/read/${userAuth.uid}`)
+    //             setAbout(data.about)
+    //             setName(data.name)
+    //             setCountry(data.country)
+    //             setPhoneNumber(data.phoneNumber)
+    //             setEmail(data.email)
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
+    //     main()
+    // }, [name])
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.userInfoSection}>
                 <View style={{ flexDirection: 'row', marginTop: 15 }}>
                     <Avatar.Image
                         source={{
-                            uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                            uri: photoURL
                         }}
                         size={80}
                     />
@@ -19,24 +48,24 @@ export default function Profile() {
                         <Title style={[styles.title, {
                             marginTop: 15,
                             marginBottom: 5
-                        }]}>Salim</Title>
-                        <Caption style={styles.caption}>@Salimmman</Caption>
+                        }]}>{name}</Title>
+                        <Caption style={styles.caption}>{about}</Caption>
                     </View>
                 </View>
             </View>
 
             <View style={styles.userInfoSection}>
                 <View style={styles.row}>
-                    <Icon name="map-marker-radius" color="#777777" size={20}/>
-                    <Text style={{color:"#777777", marginLeft:20}}>Shah Alam, Selangor</Text>
+                    <Icon name="map-marker-radius" color="#777777" size={20} />
+                    <Text style={{ color: "#777777", marginLeft: 20 }}>{country}</Text>
                 </View>
                 <View style={styles.row}>
-                    <Icon name="phone" color="#777777" size={20}/>
-                    <Text style={{color:"#777777", marginLeft:20}}>+60-124438975</Text>
+                    <Icon name="phone" color="#777777" size={20} />
+                    <Text style={{ color: "#777777", marginLeft: 20 }}>{phoneNumber}</Text>
                 </View>
                 <View style={styles.row}>
-                    <Icon name="email" color="#777777" size={20}/>
-                    <Text style={{color:"#777777", marginLeft:20}}>salim@gmail.com</Text>
+                    <Icon name="email" color="#777777" size={20} />
+                    <Text style={{ color: "#777777", marginLeft: 20 }}>{email}</Text>
                 </View>
             </View>
 
@@ -55,9 +84,9 @@ export default function Profile() {
             </View>
 
             <View style={styles.menuWrapper}>
-                <TouchableRipple onPress={()=>{}}>
+                <TouchableRipple onPress={() => { }}>
                     <View style={styles.menuItem}>
-                        <AntDesign name="setting" color='#6B46C1' size={25}/>
+                        <AntDesign name="setting" color='#6B46C1' size={25} />
                         <Text style={styles.menuItemText}>Settings</Text>
                     </View>
                 </TouchableRipple>

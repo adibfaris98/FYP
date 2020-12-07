@@ -1,11 +1,29 @@
-import React from 'react'
+import Axios from 'axios'
+import React, { useState, useEffect } from 'react'
 import { View, Text, Button, StyleSheet, FlatList } from 'react-native'
-import Card from '../components/Card'
 import { data } from '../model/data'
+import axios from 'axios'
+
+import Card from '../components/Card'
 
 export default function CardListScreen({ navigation }) {
 
+    const [tournament, setTournament] = useState(null)
+
+    useEffect(() => {
+        async function getTournament() {
+            try {
+                const response = await axios.get('/tournament');
+                setTournament(response.data)
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        getTournament()
+    }, [])
+
     const renderItem = ({ item }) => {
+        console.log(item)
         return (
             <Card
                 itemData={item}
@@ -16,9 +34,9 @@ export default function CardListScreen({ navigation }) {
     return (
         <View styles={styles.container}>
             <FlatList
-                data={data}
+                data={tournament}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.tournamentID}
             />
         </View>
     )

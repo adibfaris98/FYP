@@ -2,13 +2,15 @@ import React from 'react'
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import StarRating from '../components/StarRating'
 
-export default function Card({itemData, onPress}) {
+export default function Card({ itemData, onPress }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.card}>
                 <View style={styles.cardImgWrapper}>
                     <Image
-                        source={itemData.image}
+                        source={{
+                            uri: itemData.photoURL
+                        }}
                         resizeMode="cover"
                         style={styles.cardImg}
                     />

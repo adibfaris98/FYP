@@ -1,20 +1,67 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker } from 'react-native'
+import React, { useEffect, useState, useContext } from 'react'
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker, ScrollView } from 'react-native'
 import { Avatar } from 'react-native-paper'
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Foundation from 'react-native-vector-icons/Foundation'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
+import RNPickerSelect from 'react-native-picker-select';
+import DatePicker from 'react-native-date-picker'
+import { AuthContext } from '../navigation/AuthProvider'
 
+import auth from '@react-native-firebase/auth'
 
+import axios from 'axios'
 
-export default function EditProfileScreen() {
+export default function EditProfileScreen({ navigation }) {
+    const {photoURL,name,about,email,birthday,phoneNumber,country,gender,setPhotoURL,setName,setEmail,setAbout,setCountry,setPhoneNumber,setGender,setBirthday} = useContext(AuthContext)
+    const user = auth().currentUser;
 
-    const [image, setImage] = useState('https://api.adorable.io/avatars/50/abott@adorable.png')
+    // const [image, setImage] = useState(userDetails.photoURL)
+    // const [name, setName] = useState(userDetails.name)
+    // const [about, setAbout] = useState(userDetails.about)
+    // const [email, setEmail] = useState(userDetails.email)
+    // const [country, setCountry] = useState(userDetails.country)
+    // const [gender, setGender] = useState(userDetails.gender)
+    // const [birthday, setBirthday] = useState(new Date(userDetails.birthday))
+    // const [phone, setPhone] = useState(userDetails.phoneNumber)
+
+    const getUser = async () => {
+        try {
+            const response = await axios.get(`/user/${user.uid}`)
+            console.log(response.data.name)
+        }
+        catch {
+            console.log(error)
+        }
+    }
+
+    const updateDetails = async () => {
+        try {
+            // console.log(user)
+            const res = await axios.put(`/user/${user.uid}`,
+                {
+                    photoURL: photoURL,
+                    name: name,
+                    about: about,
+                    email: email,
+                    country: country,
+                    gender: gender,
+                    birthday: birthday,
+                    phoneNumber: phoneNumber
+                }
+            )
+            console.log(res + " salom")
+            navigation.navigate('Profile')
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -22,11 +69,11 @@ export default function EditProfileScreen() {
             compressImageMaxHeight: 300,
             cropping: true,
             compressImageQuality: 0.7
-          }).then(image => {
-            console.log(image);
-            setImage(image.path)
+        }).then(image => {
+            // console.log(image);
+            setPhotoURL(image.path)
             bs.current.snapTo(1)
-          });
+        });
     }
 
     const choosePhotoFromLibrary = () => {
@@ -35,16 +82,16 @@ export default function EditProfileScreen() {
             compressImageMaxHeight: 300,
             cropping: true,
             compressImageQuality: 0.7
-          }).then(image => {
-            console.log(image);
-            setImage(image.path)
+        }).then(image => {
+            // console.log(image);
+            setPhotoURL(image.path)
             bs.current.snapTo(1)
-          });
+        });
     }
 
     const renderInner = () => (
         <View style={styles.panel}>
-            <View style={{alignItems:'center'}}>
+            <View style={{ alignItems: 'center' }}>
                 <Text style={styles.panelTitle}>Upload Photo</Text>
                 <Text style={styles.panelSubtitle}>Choose your profile picture</Text>
             </View>
@@ -54,7 +101,7 @@ export default function EditProfileScreen() {
             <TouchableOpacity style={styles.panelButton} onPress={choosePhotoFromLibrary}>
                 <Text style={styles.panelButtonTitle}>Choose From Library</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.panelButton} onPress={()=> bs.current.snapTo(1)}>
+            <TouchableOpacity style={styles.panelButton} onPress={() => bs.current.snapTo(1)}>
                 <Text style={styles.panelButtonTitle}>Cancel</Text>
             </TouchableOpacity>
         </View>
@@ -71,6 +118,7 @@ export default function EditProfileScreen() {
     bs = React.createRef()
     fall = new Animated.Value(1)
     return (
+
         <View style={styles.container}>
             <BottomSheet
                 ref={bs}
@@ -81,107 +129,147 @@ export default function EditProfileScreen() {
                 callbackNode={fall}
                 enabledGestureInteraction={true}
             />
-            <Animated.View style={{ margin: 20, opacity:Animated.add(0.3, Animated.multiply(fall, 1.0)) }}>
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
-                        <View style={{
-                            height: 100,
-                            width: 100,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <ImageBackground
-                                source={{
-                                    uri: image,
-                                }}
-                                style={{ height: 100, width: 100 }}
-                                imageStyle={{ borderRadius: 15 }}
-                            >
-                                <View style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Icon
-                                        name="camera"
-                                        size={35}
-                                        color="#fff"
-                                        style={{
-                                            opacity: 0.7,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderWidth: 1,
-                                            borderColor: '#fff',
-                                            borderRadius: 10
-                                        }}
-                                    />
+            <ScrollView>
+                <Animated.View style={{ margin: 20, opacity: Animated.add(0.3, Animated.multiply(fall, 1.0)) }}>
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
+                            <View style={{
+                                height: 100,
+                                width: 100,
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <ImageBackground
+                                    source={{
+                                        uri: photoURL,
+                                    }}
+                                    style={{ height: 100, width: 100 }}
+                                    imageStyle={{ borderRadius: 15 }}
+                                >
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <Icon
+                                            name="camera"
+                                            size={35}
+                                            color="#fff"
+                                            style={{
+                                                opacity: 0.7,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderWidth: 1,
+                                                borderColor: '#fff',
+                                                borderRadius: 10
+                                            }}
+                                        />
 
-                                </View>
+                                    </View>
 
-                            </ImageBackground>
+                                </ImageBackground>
 
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>User Details</Text>
+
+                        <View style={styles.action}>
+                            <FontAwesome name="user-o" size={20} />
+                            <TextInput
+                                value = {name}
+                                placeholder="Name"
+                                onChangeText={(name) => setName(name)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
                         </View>
-                    </TouchableOpacity>
-                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>John Doe</Text>
+                        <View style={styles.action}>
+                            <AntDesign name="idcard" size={20} />
+                            <TextInput
+                                value = {about}
+                                placeholder="About"
+                                onChangeText={(about) => setAbout(about)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
+                        </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="envelope-o" size={20} />
+                            <TextInput
+                                value = {email}
+                                placeholder="Email"
+                                onChangeText={(email) => setEmail(email)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
+                        </View>
 
-                    <View style={styles.action}>
-                        <FontAwesome name="user-o" size={20} />
-                        <TextInput
-                            placeholder="Name"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View style={styles.action}>
-                        <FontAwesome name="envelope-o" size={20} />
-                        <TextInput
-                            placeholder="Email"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
+                        <View style={styles.action}>
+                            <Feather name="calendar" size={20} />
+                            <TextInput
+                                value = {birthday}
+                                placeholder="Birthday"
+                                onChangeText={(birthday) => setBirthday(birthday)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
+                        </View>
 
-                    <View style={styles.action}>
-                        <Foundation name="male-female" size={20} />
-                        <TextInput
-                            placeholder="Gender"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
+                        <View style={styles.action}>
+                            <Feather name="phone" size={20} />
+                            <TextInput
+                                value = {phoneNumber}
+                                placeholder="Phone"
+                                onChangeText={(phone) => setPhoneNumber(phone)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
+                        </View>
 
-                    <View style={styles.action}>
-                        <Feather name="phone" size={20} />
-                        <TextInput
-                            placeholder="Phone"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
-                        />
-                    </View>
+                        <View style={styles.action}>
+                            <FontAwesome name="globe" size={20} />
+                            <TextInput
+                                value = {country}
+                                placeholder="Country"
+                                onChangeText={(country) => setCountry(country)}
+                                placeholderTextColor="#666666"
+                                autoCorrect={false}
+                                style={styles.textInput}
+                            />
+                        </View>
 
-                    <View style={styles.action}>
-                        <FontAwesome name="globe" size={20} />
-                        <TextInput
-                            placeholder="Country"
-                            placeholderTextColor="#666666"
-                            autoCorrect={false}
-                            style={styles.textInput}
+                        <RNPickerSelect
+                            value = {gender}
+                            onValueChange={(gender) => setGender(gender)}
+                            items={[
+                                { label: 'Male', value: 'male' },
+                                { label: 'Female', value: 'female' }
+                            ]}
+                            placeholder={{ label: "Select your gender ...", value: "null" }}
                         />
-                    </View>
 
-                </View>
-                <TouchableOpacity style={styles.commandButton} onPress={() => { }}>
-                    <Text style={styles.panelButtonTitle}>
-                        Submit
+                        {/* <DatePicker
+                            date={birthday}
+                            onDateChange={(date) => console.log(date)}
+                            mode="date"
+                        /> */}
+
+                    </View>
+                    <TouchableOpacity style={styles.commandButton} onPress={updateDetails}>
+                        <Text style={styles.panelButtonTitle}>
+                            Submit
                         </Text>
-                </TouchableOpacity>
-            </Animated.View>
+                    </TouchableOpacity>
+                </Animated.View>
+            </ScrollView>
         </View>
+
     )
 }
 
@@ -195,7 +283,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#9F7AEA',
         alignItems: 'center',
         marginTop: 10,
-        borderColor:'#1A202C',
+        borderColor: '#1A202C',
         borderWidth: 1
     },
     panel: {
@@ -248,7 +336,7 @@ const styles = StyleSheet.create({
         marginVertical: 7,
         borderWidth: 1,
         borderColor: '#1A202C'
-        
+
     },
     panelButtonTitle: {
         fontSize: 17,

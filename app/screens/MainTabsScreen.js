@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,20 +16,22 @@ import CardItemDetails from './CardItemDetails';
 import EditProfileScreen from './EditProfileScreen';
 
 import TeamRegisterScreen from './TeamRegisterScreen'
-import ManagerRegisterScreen from './ManagerRegisterScreen'
+
 import PlayerRegisterScreen from './PlayerRegisterScreen'
 import LoginScreen from './LoginScreen';
+import { AuthContext } from '../navigation/AuthProvider';
 
 const HomeStack = createStackNavigator();
 const TournamentStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
-const RegisterStack = createStackNavigator();
+// const RegisterStack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabsScreen() {
+
     return (
         <Tab.Navigator
             tabBarOptions={{
@@ -81,6 +83,7 @@ export default function MainTabsScreen() {
 }
 
 const HomeStackScreen = ({ navigation }) => {
+    const { photoURL } = useContext(AuthContext)
     return (
         <HomeStack.Navigator
             screenOptions={{
@@ -123,7 +126,7 @@ const HomeStackScreen = ({ navigation }) => {
                                 onPress={() => navigation.navigate('Profile')}>
                                 <Avatar.Image
                                     source={{
-                                        uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                        uri: photoURL
                                     }}
                                     size={30}
                                 />
@@ -158,10 +161,17 @@ const HomeStackScreen = ({ navigation }) => {
                 })}
             />
             <HomeStack.Screen
-                name="RegisterScreen"
-                component={RegisterStackScreen}
-                options={() => ({
+                name="TeamRegisterScreen"
+                component={TeamRegisterScreen}
+                options={({ route }) => ({
                     title: 'Team Registration'
+                })}
+            />
+            <HomeStack.Screen
+                name="PlayerRegisterScreen"
+                component={PlayerRegisterScreen}
+                options={({ route }) => ({
+                    title: 'Player Registration'
                 })}
             />
 
@@ -277,31 +287,24 @@ const ProfileStackScreen = ({ navigation }) => {
     )
 }
 
-const RegisterStackScreen = ({ navigation }) => {
-    return (
-        <RegisterStack.Navigator>
-            <RegisterStack.Screen
-                name="TeamRegisterScreen"
-                component={TeamRegisterScreen}
-                options={{
-                    title: 'Team Register'
-                }}
-            />
-            <RegisterStack.Screen
-                name="ManagerRegisterScreen"
-                component={ManagerRegisterScreen}
-                options={{
-                    title: 'Manager Register'
-                }}
-            />
-            <RegisterStack.Screen
-                name="PlayerRegisterScreen"
-                component={PlayerRegisterScreen}
-                options={{
-                    title: 'Player Register'
-                }}
-            />
-        </RegisterStack.Navigator>
-    )
+// const RegisterStackScreen = ({ navigation }) => {
+//     return (
+//         <RegisterStack.Navigator>
+//             <RegisterStack.Screen
+//                 name="TeamRegisterScreen"
+//                 component={TeamRegisterScreen}
+//                 options={{
+//                     title: 'Team Register'
+//                 }}
+//             />
+//             <RegisterStack.Screen
+//                 name="PlayerRegisterScreen"
+//                 component={PlayerRegisterScreen}
+//                 options={{
+//                     title: 'Player Register'
+//                 }}
+//             />
+//         </RegisterStack.Navigator>
+//     )
 
-}
+// }

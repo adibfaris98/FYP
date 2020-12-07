@@ -36,7 +36,10 @@ export default function LoginScreen({ navigation }) {
             />
             <FormButton
                 buttonTitle="Sign In"
-                onPress={() => login(email, password)}
+                onPress={() => {
+                    login(email, password)
+                    console.log("logged in")
+                }}
             />
 
             <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>

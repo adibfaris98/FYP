@@ -1,19 +1,72 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker, ScrollView } from 'react-native'
 import { Avatar } from 'react-native-paper'
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Foundation from 'react-native-vector-icons/Foundation'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
+import RNPickerSelect from 'react-native-picker-select';
+import TeamForm from './TeamRegisterScreen';
+import PlayerForm from '../components/PlayerForm';
+import axios from 'axios'
+import auth from '@react-native-firebase/auth'
 
-
-export default function PlayerRegisterScreen({ navigation }) {
-
+export default function PlayerRegisterScreen({ route, navigation }) {
+    const currentUser =auth().currentUser.uid
+    const {tournamentID} = route.params
     const [image, setImage] = useState('https://api.adorable.io/avatars/50/abott@adorable.png')
+    const [numPlayers, setNumPlayers] = useState(null)
+
+    const [name, setName] = useState(null)
+    const [icNo, setIcNo] = useState(null)
+    const [athleteNo, setAthleteNo] = useState(null)
+    const [matricNo, setMatricNo] = useState(null)
+    const [gender, setGender] = useState(null)
+    const [phoneNo, setPhoneNo] = useState(null)
+    const [address, setAddress] = useState(null)
+
+    useEffect(() => {
+        getFormat()
+    }, [])
+
+    async function getFormat() {
+        try {
+            const response = await axios.get(`/tournament/format/${tournamentID}`);
+            const { numPlayers } = response.data
+            setNumPlayers(numPlayers)
+            console.log(numPlayers);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const submitPlayer = async () => {
+        try {
+            const res = await axios.post('/player',
+                {
+                    tournamentID: tournamentID,
+                    teamID: currentUser,
+                    playerDetails: {
+                        address : address,
+                        gender : gender,
+                        identificationID : icNo,
+                        name: name,
+                        numAthelete: athleteNo,
+                        numMatric: matricNo,
+                        passportPhoto: image,
+                        phoneNumber: phoneNo
+                    }
+                })
+            console.log(res + "submit team")
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -69,6 +122,7 @@ export default function PlayerRegisterScreen({ navigation }) {
 
     bs = React.createRef()
     fall = new Animated.Value(1)
+
     return (
         <View style={styles.container}>
             <BottomSheet
@@ -80,8 +134,10 @@ export default function PlayerRegisterScreen({ navigation }) {
                 callbackNode={fall}
                 enabledGestureInteraction={true}
             />
+
+            <ScrollView>
             <Animated.View style={{ margin: 20, opacity: Animated.add(0.3, Animated.multiply(fall, 1.0)) }}>
-                <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#cccccc', }}>
                     <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
                         <View style={{
                             height: 100,
@@ -122,21 +178,26 @@ export default function PlayerRegisterScreen({ navigation }) {
 
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>John Doe</Text>
+                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>Player Details</Text>
 
                     <View style={styles.action}>
                         <FontAwesome name="user-o" size={20} />
                         <TextInput
+                            value={name}
+                            onChangeText={(name) => setName(name)}
                             placeholder="Player Name"
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={styles.textInput}
                         />
                     </View>
+
                     <View style={styles.action}>
-                        <FontAwesome name="envelope-o" size={20} />
+                        <AntDesign name="idcard" size={20} />
                         <TextInput
-                            placeholder="Email"
+                            value={icNo}
+                            onChangeText={(name) => setIcNo(name)}
+                            placeholder="Identification ID"
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={styles.textInput}
@@ -144,9 +205,23 @@ export default function PlayerRegisterScreen({ navigation }) {
                     </View>
 
                     <View style={styles.action}>
-                        <Foundation name="male-female" size={20} />
+                        <FontAwesome name="user-o" size={20} />
                         <TextInput
-                            placeholder="Gender"
+                            value={athleteNo}
+                            onChangeText={(athleteNo) => setAthleteNo(athleteNo)}
+                            placeholder="Athlete Number"
+                            placeholderTextColor="#666666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    <View style={styles.action}>
+                        <FontAwesome name="user-o" size={20} />
+                        <TextInput
+                            value={matricNo}
+                            onChangeText={(matricNo) => setMatricNo(matricNo)}
+                            placeholder="Matric Number"
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={styles.textInput}
@@ -156,7 +231,9 @@ export default function PlayerRegisterScreen({ navigation }) {
                     <View style={styles.action}>
                         <Feather name="phone" size={20} />
                         <TextInput
-                            placeholder="Phone"
+                            value={phoneNo}
+                            onChangeText={(phoneNo) => setPhoneNo(phoneNo)}
+                            placeholder="Phone Number"
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={styles.textInput}
@@ -166,20 +243,34 @@ export default function PlayerRegisterScreen({ navigation }) {
                     <View style={styles.action}>
                         <FontAwesome name="globe" size={20} />
                         <TextInput
-                            placeholder="Country"
+                            value={address}
+                            placeholder="Address"
+                            onChangeText={(address) => setAddress(address)}
                             placeholderTextColor="#666666"
                             autoCorrect={false}
                             style={styles.textInput}
                         />
                     </View>
 
+                    <RNPickerSelect
+                        value={gender}
+                        onValueChange={(gender) => setGender(gender)}
+                        items={[
+                            { label: 'Male', value: 'male' },
+                            { label: 'Female', value: 'female' }
+                        ]}
+                        placeholder={{ label: "Select your gender ...", value: "null" }}
+                    />
                 </View>
-                <TouchableOpacity style={styles.commandButton} onPress={() => { navigation.push('PlayerRegisterScreen')}}>
-                    <Text style={styles.panelButtonTitle}>
-                        Next
-                        </Text>
-                </TouchableOpacity>
             </Animated.View>
+                <TouchableOpacity style={styles.commandButton} onPress={() => { 
+                    submitPlayer()
+                    navigation.navigate('CardItemDetails') 
+                    }}>
+                    <Text style={styles.panelButtonTitle}>Next</Text>
+                </TouchableOpacity>
+            </ScrollView>
+
         </View>
     )
 }
@@ -274,5 +365,20 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+    },
+    section: {
+        // padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#cccccc',
+        backgroundColor: 'white',
+    },
+    title: {
+        fontSize: 20,
+    },
+    section: {
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#cccccc',
+        backgroundColor: 'white',
     },
 });

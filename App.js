@@ -23,6 +23,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {
@@ -31,16 +32,12 @@ import {
 import AuthStack from './app/navigation/AuthStack';
 import Providers from './app/navigation';
 
+
 const Drawer = createDrawerNavigator();
 
 function App() {
   return (
-    // <NavigationContainer>
-    //   <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-    //     <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
-    //   </Drawer.Navigator>
-    // </NavigationContainer>
-    <Providers/>
+    <Providers />
   )
 };
 
