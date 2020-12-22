@@ -18,7 +18,9 @@ export default function SignupScreen({ navigation }) {
             <Text style={styles.text}>Create an account</Text>
             <FormInput
                 labelValue={name}
-                onChangeText={(name) => setName(name)}
+                onChangeText={(name) => {
+                    setName(name)
+                }}
                 placeholderText="Name"
                 iconType="user"
                 keyboardType="default"
@@ -48,7 +50,17 @@ export default function SignupScreen({ navigation }) {
             />
             <FormButton
                 buttonTitle="Sign Up"
-                onPress={() => register(email, password, name)}
+                onPress={() => {
+                    if (name == null || password == null || email == null || confirmPassword == null) {
+                        alert("Please fill in all fields")
+                    }
+                    else if (password !== confirmPassword) {
+                        alert("Your password do not match")
+                    } else {
+                        register(email, password, name)
+                    }
+                }
+                }
             />
 
             <View style={styles.textPrivate}>

@@ -1,7 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { TextInput, View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert, TouchableOpacity, TouchableHighlight, Modal } from 'react-native'
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
-import { useForm, Controller } from "react-hook-form";
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import * as Animatable from 'react-native-animatable'
@@ -15,63 +14,18 @@ export default function CardItemDetails({ route, navigation }) {
     const navTitleView = useRef(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [teamName, setTeamName] = useState(null)
-    const [isRegister, setIsRegister] = useState(null)
-
-    useEffect(() => {
-        getTeam()
-    }, [])
-
-    const getTeam = async () => {
-        try {
-            const res = await axios.get(`/${itemData.tournamentID}/${currentUser}/team`)
-            setIsRegister(res.data.teamName)
-            console.log(isRegister)
-
-        } catch (error) {
-
-        }
-    }
 
     const submitTeam = async () => {
         try {
-            const res = await axios.post(`/${itemData.tournamentID}/team`,
+            const res = await axios.post('/team',
                 {
+                    tournamentID: itemData.tournamentID,
                     teamName: teamName,
                     uid: currentUser
                 })
             console.log(res + "submit team")
         } catch (error) {
             console.log(error)
-        }
-    }
-
-    const buttonType = () => {
-        if (isRegister == null) {
-            return (
-                <Button
-                    title='Register here'
-                    color='#6B46C1'
-                    onPress={() => {
-                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                        setModalVisible(true)
-                        console.log(itemData)
-                    }}
-                    style={{ marginHorizontal: 2 }}
-                />
-            )
-        } else {
-            return (
-                <Button
-                    title='Edit Registration'
-                    color='orange'
-                    onPress={() => {
-                        navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                        // setModalVisible(true)
-                        console.log(itemData)
-                    }}
-                    style={{ marginHorizontal: 2 }}
-                />
-            )
         }
     }
     return (
@@ -102,19 +56,26 @@ export default function CardItemDetails({ route, navigation }) {
                 )}
             >
                 {/* Overview & Description */}
-                <TriggeringView
-                    style={styles.section}
+                <TriggeringView style={styles.section}
                     onHide={() => navTitleView.current.fadeInUp(200)}
                     onDisplay={() => navTitleView.current.fadeOut(100)}
                 >
+
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.title}>Overview</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                             {/* <FontAwesome name='star' size={16} color='#6B46C1' />
                             <Text style={{ marginHorizontal: 2 }}>{itemData.rating}</Text>
                             <Text>({itemData.reviews})</Text> */}
-
-                            {buttonType()}
+                            <Button
+                                title='Manage Tournament'
+                                color='#6B46C1'
+                                onPress={() => {
+                                    navigation.navigate('TournamentTab', { itemData: itemData })
+                                    // setModalVisible(true)
+                                    console.log(itemData)
+                                }}
+                                style={{ marginHorizontal: 2 }} />
                         </View>
                     </View>
                 </TriggeringView>
@@ -213,6 +174,9 @@ export default function CardItemDetails({ route, navigation }) {
             </View>
 
         </View>
+
+
+
     )
 }
 

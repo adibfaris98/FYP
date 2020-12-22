@@ -8,8 +8,9 @@ import { AuthContext } from '../navigation/AuthProvider'
 
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
+import HomeOrganizer from './Organizer/HomeOrganizer'
 
-export default function DrawerContent(props) {
+export default function DrawerContent({props,navigation}) {
    
     const { user, logout, name, email, photoURL} = useContext(AuthContext)
 
@@ -29,8 +30,6 @@ export default function DrawerContent(props) {
     //     }
     //     main()
     // }, [userAuth,email,name])
-
-
 
     return (
         
@@ -79,6 +78,7 @@ export default function DrawerContent(props) {
                             )}
                             label="Home"
                             onPress={() => {
+                                navigation.navigate("HomeDrawer")
                             }}
                         />
 
@@ -92,12 +92,13 @@ export default function DrawerContent(props) {
                             )}
                             label="Settings"
                             onPress={() => {
+                                navigation.navigate("Profile")
                             }}
                         />
                     </Drawer.Section>
 
                     <Drawer.Section title="Become Organizer ?">
-                        <DrawerItem
+                        {/* <DrawerItem
                             icon={({ color, size }) => (
                                 <Entypo
                                     name="sports-club"
@@ -108,7 +109,7 @@ export default function DrawerContent(props) {
                             label="Create an Event"
                             onPress={() => {
                             }}
-                        />
+                        /> */}
                         <DrawerItem
                             icon={({ color, size }) => (
                                 <MaterialCommunityIcons
@@ -119,6 +120,7 @@ export default function DrawerContent(props) {
                             )}
                             label="Create a Tournament"
                             onPress={() => {
+                                navigation.navigate('HomeOrganizer')
                             }}
                         />
 

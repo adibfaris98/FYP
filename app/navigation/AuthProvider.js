@@ -58,7 +58,7 @@ export default function AuthProvider({ children }) {
                         setBirthday(data.birthday)
                         setPhoneNumber(data.phoneNumber)
                     } catch (e) {
-                        console.log(e)
+                        alert(e)
                     }
                     // console.log(getPhotoURL())
                 },
@@ -85,7 +85,6 @@ export default function AuthProvider({ children }) {
                                 tournamentsRef: []
                             }
                         )
-
                         const { uid } = cred.user
                         const { data } = await axios.get(`/user/${uid}`)
                         setUserDetails(data)
@@ -98,7 +97,7 @@ export default function AuthProvider({ children }) {
                         setBirthday(data.birthday)
                         setPhoneNumber(data.phoneNumber)
                     } catch (e) {
-                        console.log(e)
+                        alert(e)
                     }
                 },
                 logout: async () => {

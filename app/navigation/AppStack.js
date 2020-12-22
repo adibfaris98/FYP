@@ -3,7 +3,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 
 import MainTabScreen from '../screens/MainTabsScreen'
+import MainTabOrganizer from '../screens/Organizer/MainTabsScreen'
 import DrawerContent from '../screens/DrawerContent'
+import HomeOrganizer from '../screens/Organizer/HomeOrganizer';
+import TournamentScreen from '../screens/Organizer/TournamentScreen'
+import NotificationsScreen from '../screens/Organizer/NotificationsScreen'
+import ProfileScreen from '../screens/Organizer/ProfileScreen'
 
 import { StyleSheet } from 'react-native';
 
@@ -15,6 +20,7 @@ function AppStack() {
   return (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
+      <Drawer.Screen name="HomeOrganizer" component={MainTabOrganizer}/>
     </Drawer.Navigator>
   )
 };

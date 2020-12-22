@@ -7,26 +7,27 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Ionicons'
-import { AuthContext } from '../navigation/AuthProvider';
+import { AuthContext } from '../../navigation/AuthProvider';
 
 //main
-import Home from './Home'
-import Notification from './NotificationScreen'
-import Profile from './Profile'
-import Tournament from './Tournament'
-import LoginScreen from './LoginScreen';
+import Home from './HomeOrganizer'
+import Notification from './NotificationsScreen'
+import Profile from './ProfileScreen'
+import Tournament from './TournamentScreen'
+import LoginScreen from '../LoginScreen'
 
-//home
-import CardListScreen from './CardListScreen';
+//home stack screen
 import CardItemDetails from './CardItemDetails';
+import CardListScreen from './CardListScreen'
 
 //tournament
 import TeamRegisterScreen from './TeamRegisterScreen'
 import EditPlayerScreen from './EditPlayerScreen';
 import PlayerDetailsScreen from './PlayerDetailsScreen';
 import PlayerRegisterScreen from './PlayerRegisterScreen'
+import TournamentTab from './TournamentTab'
 
-//profile
+//profile stack screen
 import EditProfileScreen from './EditProfileScreen';
 
 const Tab = createBottomTabNavigator();
@@ -36,7 +37,6 @@ const NotificationStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
 export default function MainTabsScreen() {
-
     return (
         <Tab.Navigator
             tabBarOptions={{
@@ -59,7 +59,7 @@ export default function MainTabsScreen() {
                 name="Tournament"
                 component={TournamentStackScreen}
                 options={{
-                    tabBarLabel: 'Tournament',
+                    tabBarLabel: 'My Tournament',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="trophy" color={color} size={size} />
                     ),
@@ -119,13 +119,14 @@ const HomeStackScreen = ({ navigation }) => {
                     ),
                     headerRight: () => (
                         <View style={{ flexDirection: 'row' }}>
-                            <Icon.Button
+                            {/* <Icon.Button
                                 color='#333'
                                 name='ios-search'
                                 size={25}
                                 backgroundColor="#fff"
                                 onPress={() => { }}>
-                            </Icon.Button>
+                            </Icon.Button> */}
+                            <Text>Organizer</Text>
                             <TouchableOpacity
                                 style={{ paddingHorizontal: 10, marginTop: 5 }}
                                 onPress={() => navigation.navigate('Profile')}>
@@ -222,7 +223,8 @@ const TournamentStackScreen = ({ navigation }) => {
                             name='menu'
                             size={25}
                             backgroundColor="#fff"
-                            onPress={() => { navigation.openDrawer() }}></MaterialCommunityIcons.Button>
+                            onPress={() => { navigation.openDrawer() }}>
+                        </MaterialCommunityIcons.Button>
                     )
                 }}
             />
@@ -237,7 +239,7 @@ const TournamentStackScreen = ({ navigation }) => {
                     headerTintColor: '#fff'
                 })}
             />
-             <TournamentStack.Screen
+            <TournamentStack.Screen
                 name="TeamRegisterScreen"
                 component={TeamRegisterScreen}
                 options={({ route }) => ({
@@ -263,6 +265,22 @@ const TournamentStackScreen = ({ navigation }) => {
                 component={EditPlayerScreen}
                 options={({ route }) => ({
                     title: 'Edit Player'
+                })}
+            />
+            <TournamentStack.Screen
+                name="TournamentTab"
+                component={TournamentTab}
+                options={({ route }) => ({
+                    title: 'Organize',
+                    headerRight: () => (
+                        <AntDesign.Button
+                            color='#333'
+                            name='setting'
+                            size={25}
+                            backgroundColor="#fff"
+                            onPress={() => {  }}>
+                        </AntDesign.Button>
+                    )
                 })}
             />
         </TournamentStack.Navigator>
@@ -330,7 +348,7 @@ const ProfileStackScreen = ({ navigation }) => {
                             name='account-edit'
                             size={25}
                             backgroundColor="#fff"
-                            onPress={() => { navigation.navigate('EditProfileScreen') }}
+                        // onPress={() => { navigation.navigate('EditProfileScreen') }}
                         />
                     )
                 }} />
@@ -344,25 +362,3 @@ const ProfileStackScreen = ({ navigation }) => {
         </ProfileStack.Navigator>
     )
 }
-
-// const RegisterStackScreen = ({ navigation }) => {
-//     return (
-//         <RegisterStack.Navigator>
-//             <RegisterStack.Screen
-//                 name="TeamRegisterScreen"
-//                 component={TeamRegisterScreen}
-//                 options={{
-//                     title: 'Team Register'
-//                 }}
-//             />
-//             <RegisterStack.Screen
-//                 name="PlayerRegisterScreen"
-//                 component={PlayerRegisterScreen}
-//                 options={{
-//                     title: 'Player Register'
-//                 }}
-//             />
-//         </RegisterStack.Navigator>
-//     )
-
-// }

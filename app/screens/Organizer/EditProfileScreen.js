@@ -12,7 +12,7 @@ import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker'
-import { AuthContext } from '../navigation/AuthProvider'
+import { AuthContext } from '../../navigation/AuthProvider'
 
 import auth from '@react-native-firebase/auth'
 
