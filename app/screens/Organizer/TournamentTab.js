@@ -1,49 +1,106 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { DataTable } from 'react-native-paper'
+import axios from 'axios'
+
+import ApproveRegistration from './ApproveRegistration'
+import GroupStage from './GroupStage'
+import FinalStage from './FinalStage'
 
 const Tab = createMaterialTopTabNavigator();
+const ApproveRegistrationStack = createStackNavigator();
+const GroupStageStack = createStackNavigator();
+const FinalStageStack = createStackNavigator();
 
-export default function TournamentTab() {
+export default function TournamentTab({ route, navigation }) {
+    const tournament = route.params.tournament
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Group" component={GroupSeedings} />
-            <Tab.Screen name="Standings" component={Standings} />
-            <Tab.Screen name="Group Stage" component={GroupStage} />
-            <Tab.Screen name="Final Stage" component={FinalStage} />
+            <Tab.Screen name="Registration" component={ApproveRegistrationStackScreen} initialParams={{ tournament: tournament }} />
+            <Tab.Screen name="Group Stage" component={GroupStageStackScreen} initialParams={{ tournament: tournament }} />
+            <Tab.Screen name="Final Stage" component={FinalStageStackScreen} initialParams={{ tournament: tournament }} />
         </Tab.Navigator>
     )
 }
 
-function GroupSeedings() {
+function ApproveRegistrationStackScreen({ route, navigation }) {
+    const tournament = route.params.tournament
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>GroupSeedings!</Text>
-        </View>
-    );
+        <ApproveRegistrationStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#fff',
+                    shadowColor: '#fff'
+                },
+                headerTintColor: '#333',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+                headerTitleAlign: 'center'
+            }}>
+            <ApproveRegistrationStack.Screen
+                name="ApproveRegistration"
+                component={ApproveRegistration}
+                initialParams={{ tournament: tournament }}
+                options={{
+
+                }} />
+        </ApproveRegistrationStack.Navigator>
+    )
 }
 
-function Standings() {
+function GroupStageStackScreen({ route }) {
+    const tournament = route.params.tournament
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>HStandingsome!</Text>
-        </View>
-    );
+        <GroupStageStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#fff',
+                    shadowColor: '#fff'
+                },
+                headerTintColor: '#333',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+                headerTitleAlign: 'center'
+            }}>
+            <GroupStageStack.Screen
+                name="GroupStage"
+                component={GroupStage}
+                initialParams={{ tournament: tournament }}
+                options={{
+
+                }} />
+        </GroupStageStack.Navigator>
+    )
 }
 
-function GroupStage() {
+function FinalStageStackScreen({ route }) {
+    const tournament = route.params.tournament
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>GroupStage!</Text>
-        </View>
-    );
-}
+        <FinalStageStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#fff',
+                    shadowColor: '#fff'
+                },
+                headerTintColor: '#333',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+                headerTitleAlign: 'center'
+            }}>
+            <FinalStageStack.Screen
+                name="FinalStage"
+                component={FinalStage}
+                initialParams={{ tournament: tournament }}
+                options={{
 
-function FinalStage() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>FinalStage!</Text>
-        </View>
+                }} />
+        </FinalStageStack.Navigator>
     );
 }
 
