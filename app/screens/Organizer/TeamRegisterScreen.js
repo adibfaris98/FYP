@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react'
 import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground, TextInput, Picker, ScrollView, Modal, SafeAreaView } from 'react-native'
-import { Avatar, Caption, Title, TouchableRipple } from 'react-native-paper'
+import { Avatar, Caption, Title, TouchableRipple, DataTable } from 'react-native-paper'
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -13,7 +13,6 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { DataTable } from 'react-native-paper'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
 

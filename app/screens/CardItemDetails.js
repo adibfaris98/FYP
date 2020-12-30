@@ -34,10 +34,9 @@ export default function CardItemDetails({ route, navigation }) {
 
     const submitTeam = async () => {
         try {
-            const res = await axios.post(`/${itemData.tournamentID}/team`,
+            const res = await axios.post(`/${currentUser}/${itemData.tournamentID}/team`,
                 {
-                    teamName: teamName,
-                    uid: currentUser
+                    teamName: teamName
                 })
             console.log(res + "submit team")
         } catch (error) {
@@ -190,9 +189,13 @@ export default function CardItemDetails({ route, navigation }) {
                                 <TouchableOpacity
                                     style={{ ...styles.openButton, backgroundColor: "green" }}
                                     onPress={() => {
-                                        submitTeam()
-                                        setModalVisible(!modalVisible);
-                                        navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                        if (teamName == null) {
+                                            alert("Team Name is Empty")
+                                        } else {
+                                            submitTeam()
+                                            setModalVisible(!modalVisible);
+                                            navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
+                                        }
                                     }}
                                 >
                                     <Text style={styles.textStyle}>SAVE</Text>

@@ -8,16 +8,12 @@ import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import { AuthContext } from '../navigation/AuthProvider'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { PlayerContext } from './TeamRegisterScreen'
 
 export default function PlayerDetailsScreen({ route, navigation }) {
     const currentUser = auth().currentUser.uid;
     const player = route.params.playerDetails
     const tournamentID = route.params.tournamentID
-    const getTeam = route.params.getTeam
-    // const listPlayers = route.params.listPlayers
-
-    // const { listPlayers } = useContext(PlayerContext)
+    const format = route.params.format
 
     const deletePlayer = async () => {
         try {
@@ -29,52 +25,70 @@ export default function PlayerDetailsScreen({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
+            {format && format.passportPhoto == true ?
+                <View style={styles.userPhotoSection}>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                        <Avatar.Image
+                            source={{
+                                uri: player.passportPhoto
+                            }}
+                            size={80}
+                        />
 
-            <View style={styles.userPhotoSection}>
-                <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                    <Avatar.Image
-                        source={{
-                            uri: player.passportPhoto
-                        }}
-                        size={80}
-                    />
-                    <View>
-                        <Title style={[styles.title, {
-                            marginTop: 15,
-                            marginBottom: 5
-                        }]}>{player.name}</Title>
                     </View>
-                </View>
-            </View>
+                </View> : null}
+
+            {format && format.name == true ?
+                <View>
+                    <Title style={[styles.title, {
+                        marginTop: 15,
+                        marginBottom: 5,
+                        textAlign:'center'
+                    }]}>{player.name}</Title>
+                </View> : null
+            }
 
             <View style={styles.userInfoSection}>
-                <View style={styles.row}>
-                    <Icon name="map-marker-radius" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Address: {player.address}</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="card-account-details-outline" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>IC Number: {player.identificationID}</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="card-account-details-outline" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Matric Number: {player.numMatric}</Text>
-                </View>
-                <View style={styles.row}>
-                    <Octicons name="jersey" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Athlete Number: {player.numAthelete}</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="phone" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Phone Number: {player.phoneNumber}</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="email" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Gender: {player.gender}</Text>
-                </View>
+                {format && format.address == true ?
+                    <View style={styles.row}>
+                        <Icon name="map-marker-radius" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Address: {player.address}</Text>
+                    </View> : null
+                }
+                {format && format.identificationID == true ?
+                    <View style={styles.row}>
+                        <Icon name="card-account-details-outline" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>IC Number: {player.identificationID}</Text>
+                    </View> : null
+                }
+                {format && format.numMatric == true ?
+                    <View style={styles.row}>
+                        <Icon name="card-account-details-outline" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Matric Number: {player.numMatric}</Text>
+                    </View> : null
+                }
+                {format && format.numAthelete == true ?
+                    <View style={styles.row}>
+                        <Octicons name="jersey" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Athlete Number: {player.numAthelete}</Text>
+                    </View> : null
+                }
+                {format && format.phoneNumber == true ?
+                    <View style={styles.row}>
+                        <Icon name="phone" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Phone Number: {player.phoneNumber}</Text>
+                    </View> : null
+                }
+                {format && format.gender == true ?
+                    <View style={styles.row}>
+                        <Icon name="email" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Gender: {player.gender}</Text>
+                    </View> : null
+                }
+
             </View>
 
-            <View style={{ flexDirection: 'row', justifyContent:'space-evenly' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                 <Button
                     color="red"
                     title="Delete Player"
@@ -92,7 +106,7 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                                     text: "OK",
                                     onPress: () => {
                                         deletePlayer()
-                                        navigation.navigate('CardItemDetails')
+                                        navigation.navigate('TeamRegisterScreen')
                                         // getTeam()
                                     }
                                 }

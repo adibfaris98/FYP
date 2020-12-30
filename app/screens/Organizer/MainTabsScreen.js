@@ -271,16 +271,17 @@ const TournamentStackScreen = ({ navigation }) => {
                 name="TournamentTab"
                 component={TournamentTab}
                 options={({ route }) => ({
-                    title: 'Organize',
-                    headerRight: () => (
-                        <AntDesign.Button
-                            color='#333'
-                            name='setting'
-                            size={25}
-                            backgroundColor="#fff"
-                            onPress={() => {  }}>
-                        </AntDesign.Button>
-                    )
+                    // title: 'Organize',
+                    // headerRight: () => (
+                    //     <AntDesign.Button
+                    //         color='#333'
+                    //         name='setting'
+                    //         size={25}
+                    //         backgroundColor="#fff"
+                    //         onPress={() => {  }}>
+                    //     </AntDesign.Button>
+                    // )
+                    headerShown: false
                 })}
             />
         </TournamentStack.Navigator>

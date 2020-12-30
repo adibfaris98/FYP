@@ -22,6 +22,7 @@ export default function Tournament({ navigation }) {
             console.error(error);
         }
     }
+    
     const renderItem = ({ item }) => {
         return (
             <Card
@@ -37,7 +38,7 @@ export default function Tournament({ navigation }) {
             <FlatList
                 data={tournament}
                 renderItem={renderItem}
-                keyExtractor={item => item.uid}
+                keyExtractor={item => item.tournamentID}
             />
         </View>
     )

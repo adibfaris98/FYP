@@ -29,8 +29,6 @@ export default function GroupStage({ route, navigation }) {
     const [seedingG, setSeedingG] = useState()
     const [seedingH, setSeedingH] = useState()
 
-
-
     useEffect(() => {
         getSeeding()
         getFixtureGroup()
@@ -87,9 +85,12 @@ export default function GroupStage({ route, navigation }) {
 
                 {
                     seedingA != null ?
-                        < DataTable >
+                        < DataTable style={{ backgroundColor: "white", borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }} >
                             <DataTable.Header>
-                                <DataTable.Title>
+                                <DataTable.Title style={{
+                                    alignSelf: 'center',
+                                    fontWeight: 'bold',
+                                }}>
                                     Group A
                             </DataTable.Title>
                             </DataTable.Header>
@@ -97,7 +98,7 @@ export default function GroupStage({ route, navigation }) {
                             {seedingA.map((value, i) => {
                                 return (
                                     <DataTable.Row key={i}>
-                                        <DataTable.Cell>
+                                        <DataTable.Cell style={{ flex: 3 }}>
                                             {value.teamName}
                                         </DataTable.Cell>
                                     </DataTable.Row>
@@ -108,7 +109,7 @@ export default function GroupStage({ route, navigation }) {
                 }
                 {
                     seedingB != null ?
-                        < DataTable >
+                        < DataTable style={{ backgroundColor: "white", borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
                             <DataTable.Header>
                                 <DataTable.Title>
                                     Group B
@@ -263,7 +264,7 @@ export default function GroupStage({ route, navigation }) {
 
                 {
                     fixtureA != null ?
-                        <View>
+                        <View >
                             <Text style={{
                                 // alignSelf: 'center',
                                 fontSize: 18,
@@ -273,10 +274,13 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureA.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph style={{textAlign:"center"}} key={i}>
                                                 {value.homeTeam} vs {value.awayTeam}
+                                            </Paragraph>
+                                            <Paragraph style={{textAlign:"center"}}>
+                                                {value.homeScore} {value.awayScore}
                                             </Paragraph>
                                         </Card.Content>
                                     </Card>
@@ -298,10 +302,13 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureB.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
                                         <Card.Content>
                                             <Paragraph key={i}>
                                                 {value.homeTeam} vs {value.awayTeam}
+                                            </Paragraph>
+                                            <Paragraph style={{textAlign:"center"}}>
+                                                {value.homeScore} {value.awayScore}
                                             </Paragraph>
                                         </Card.Content>
                                     </Card>

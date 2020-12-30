@@ -17,8 +17,6 @@ import { DataTable } from 'react-native-paper'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
 
-const PlayerContext = createContext()
-
 export default function TeamRegisterScreen({ route, navigation }) {
     const currentUser = auth().currentUser.uid;
     const { tournamentID } = route.params.itemData
@@ -37,10 +35,11 @@ export default function TeamRegisterScreen({ route, navigation }) {
     const [numAthelete, setNumAthelete] = useState(null)
     const [phoneNumber, setPhoneNum] = useState(null)
     const [gender, setGender] = useState(null)
-
+    const [format, setFormat] = useState(null)
 
     useEffect(() => {
         getTeam()
+        getFormat()
         console.log(listPlayers)
         console.log(teamName)
     }, [])
@@ -73,6 +72,17 @@ export default function TeamRegisterScreen({ route, navigation }) {
                 })
         } catch (error) {
 
+        }
+    }
+
+    const getFormat = async () => {
+        try {
+            const response = await axios.get(`/${tournamentID}/format`)
+            // const { teamName, listPlayers } = response.data
+            setFormat(response.data)
+            console.log(response.data)
+        } catch (error) {
+            console.error(error)
         }
     }
 
@@ -147,20 +157,18 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     <DataTable.Title>No.</DataTable.Title>
                     <DataTable.Title>Player Name</DataTable.Title>
                     <DataTable.Title>IC No.</DataTable.Title>
-                    <DataTable.Title>Matric No.</DataTable.Title>
                 </DataTable.Header>
 
-                {listPlayers.map(item => (
+                {listPlayers.map((item,i) => (
                     <TouchableOpacity
-                        key={item.identificationID}
+                        key={i}
                         onPress={() => {
-                            navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, getTeam })
+                            navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, format })
                         }}>
                         <DataTable.Row>
-                            <DataTable.Cell>{i++}</DataTable.Cell>
+                            <DataTable.Cell>{i+1}</DataTable.Cell>
                             <DataTable.Cell>{item.name}</DataTable.Cell>
                             <DataTable.Cell>{item.identificationID}</DataTable.Cell>
-                            <DataTable.Cell>{item.numMatric}</DataTable.Cell>
                         </DataTable.Row>
                     </TouchableOpacity>
                 ))
@@ -197,96 +205,120 @@ export default function TeamRegisterScreen({ route, navigation }) {
 
                                 <Text style={styles.title}>Player Information</Text>
 
-                                <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
-                                    <View style={{
-                                        height: 100,
-                                        width: 100,
-                                        borderRadius: 15,
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                    }}>
-                                        <ImageBackground
-                                            source={{
-                                                uri: passportPhoto,
-                                            }}
-                                            style={{ height: 100, width: 100 }}
-                                            imageStyle={{ borderRadius: 15 }}
-                                        >
-                                            <View style={{
-                                                flex: 1,
-                                                justifyContent: 'center',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Icon
-                                                    name="camera"
-                                                    size={35}
-                                                    color="#666666"
-                                                    style={{
-                                                        opacity: 0.7,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        borderWidth: 1,
-                                                        borderColor: '#666666',
-                                                        borderRadius: 10
-                                                    }}
-                                                />
-                                            </View>
-                                        </ImageBackground>
+                                {format && format.passportPhoto == true ?
+                                    <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
+                                        <View style={{
+                                            height: 100,
+                                            width: 100,
+                                            borderRadius: 15,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <ImageBackground
+                                                source={{
+                                                    uri: passportPhoto,
+                                                }}
+                                                style={{ height: 100, width: 100 }}
+                                                imageStyle={{ borderRadius: 15 }}
+                                            >
+                                                <View style={{
+                                                    flex: 1,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <Icon
+                                                        name="camera"
+                                                        size={35}
+                                                        color="#666666"
+                                                        style={{
+                                                            opacity: 0.7,
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            borderWidth: 1,
+                                                            borderColor: '#666666',
+                                                            borderRadius: 10
+                                                        }}
+                                                    />
+                                                </View>
+                                            </ImageBackground>
 
-                                    </View>
-                                </TouchableOpacity>
+                                        </View>
+                                    </TouchableOpacity> : null
+                                }
 
-                                <TextInput
-                                    value={name}
-                                    onChangeText={(name) => setName(name)}
-                                    placeholder="Name"
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <TextInput
-                                    value={address}
-                                    onChangeText={(address) => setAddress(address)}
-                                    placeholder="Address"
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <TextInput
-                                    value={identificationID}
-                                    onChangeText={(identificationID) => setIdentificationID(identificationID)}
-                                    placeholder="IC No."
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <TextInput
-                                    value={numMatric}
-                                    onChangeText={(numMatric) => setNumMatric(numMatric)}
-                                    placeholder="Matric No."
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <TextInput
-                                    value={numAthelete}
-                                    onChangeText={(numAthelete) => setNumAthelete(numAthelete)}
-                                    placeholder="Athlete No."
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <TextInput
-                                    value={phoneNumber}
-                                    onChangeText={(phoneNumber) => setPhoneNum(phoneNumber)}
-                                    placeholder="Phone No."
-                                    placeholderTextColor="#666666"
-                                    autoCorrect={false}
-                                />
-                                <RNPickerSelect
-                                    value={gender}
-                                    onValueChange={(gender) => setGender(gender)}
-                                    items={[
-                                        { label: 'Male', value: 'male' },
-                                        { label: 'Female', value: 'female' }
-                                    ]}
-                                    placeholder={{ label: "Select your gender ...", value: "null" }}
-                                />
+                                {format && format.name == true ?
+                                    <TextInput
+                                        value={name}
+                                        onChangeText={(name) => setName(name)}
+                                        placeholder="Name"
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+                                {format && format.identificationID == true ?
+                                    <TextInput
+                                        value={identificationID}
+                                        onChangeText={(identificationID) => setIdentificationID(identificationID)}
+                                        placeholder="IC No."
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+
+                                {format && format.address == true ?
+                                    <TextInput
+                                        value={address}
+                                        onChangeText={(address) => setAddress(address)}
+                                        placeholder="Address"
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+                                {format && format.numMatric == true ?
+                                    <TextInput
+                                        value={numMatric}
+                                        onChangeText={(numMatric) => setNumMatric(numMatric)}
+                                        placeholder="Matric No."
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+                                {format && format.numAthelete == true ?
+                                    <TextInput
+                                        value={numAthelete}
+                                        onChangeText={(numAthelete) => setNumAthelete(numAthelete)}
+                                        placeholder="Athlete No."
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+                                {format && format.phoneNumber == true ?
+                                    <TextInput
+                                        value={phoneNumber}
+                                        onChangeText={(phoneNumber) => setPhoneNum(phoneNumber)}
+                                        placeholder="Phone No."
+                                        placeholderTextColor="#666666"
+                                        autoCorrect={false}
+                                    /> : null
+                                }
+
+                                {format && format.gender == true ?
+                                    <RNPickerSelect
+                                        value={gender}
+                                        onValueChange={(gender) => setGender(gender)}
+                                        items={[
+                                            { label: 'Male', value: 'male' },
+                                            { label: 'Female', value: 'female' }
+                                        ]}
+                                        placeholder={{ label: "Select your gender ...", value: "null" }}
+                                    /> : null
+                                }
+
                                 <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                                     <TouchableOpacity
                                         style={{ ...styles.openButton, backgroundColor: "green" }}

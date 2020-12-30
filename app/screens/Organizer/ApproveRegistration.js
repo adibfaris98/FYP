@@ -7,64 +7,48 @@ import { DataTable } from 'react-native-paper'
 import axios from 'axios'
 
 export default function ApproveRegistration({ route, navigation }) {
-    // const { tournamentID } = route.params.tournament
-    // const [pendingList, setPendingList] = useState([])
+    const { tournamentID } = route.params.tournament
+    const [pendingList, setPendingList] = useState([])
 
-    // useEffect(() => {
-    // getPendingList()
-    // console.log(pendingList)
-    // }, [])
+    useEffect(() => {
+        getPendingList()
+        console.log(pendingList)
+    }, [])
 
-    // const getPendingList = async () => {
-    //     try {
-    //         const response = await axios.get(`/organizer/${tournament.tournamentID}/pendingList`)
-    //         const data = response.data
-    //         setPendingList(data)
+    const getPendingList = async () => {
+        try {
+            const response = await axios.get(`/organizer/${tournamentID}/pendingList`)
+            const data = response.data
+            setPendingList(data)
+        } catch (error) {
 
-    //         pendingList.forEach(element => {
-    //             const userRes = await axios.get(`/user/${element.uid}`)
-
-    //         });
-    //         const userRes = await axios.get('user')
-    //         // return data
-    //     } catch (error) {
-
-    //     }
-    // }
+        }
+    }
 
     return (
         <View style={{ flex: 1 }}>
-            <Text style={{
-                // alignSelf: 'center',
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: '#333'
-            }}>Registration Approval</Text>
             <DataTable>
                 <DataTable.Header>
                     <DataTable.Title>Team Name</DataTable.Title>
                     <DataTable.Title>Manager Name</DataTable.Title>
                     <DataTable.Title>Email</DataTable.Title>
-                    <DataTable.Title>Actions</DataTable.Title>
                 </DataTable.Header>
-                {/* 
-                {pendingList && pendingList.map(item => (
+
+                {pendingList && pendingList.map((item, i) => (
                     <TouchableOpacity
-                        key={item.uid}
-                        // onPress={() => {
-                        //     navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, getTeam })
-                        // }}
-                        >
-                        <DataTable.Row>
+                        key={i}
+                        onPress={() => {
+                            navigation.navigate('PlayerList', { teamID: item.uid, playerList: item.playerList, tournamentID })
+                        }}
+                    >
+                        <DataTable.Row key={i}>
                             <DataTable.Cell>{item.teamName}</DataTable.Cell>
-                            <DataTable.Cell>ali</DataTable.Cell>
-                            <DataTable.Cell>ali@gmail.com</DataTable.Cell>
-                            <DataTable.Cell>a</DataTable.Cell>
-        
+                            <DataTable.Cell>{item.managerName}</DataTable.Cell>
+                            <DataTable.Cell>{item.managerEmail}</DataTable.Cell>
                         </DataTable.Row>
                     </TouchableOpacity>
                 ))
-                } */}
+                }
 
                 <DataTable.Pagination
                     page={1}

@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DataTable } from 'react-native-paper'
-import axios from 'axios'
 
+//Main Tab Screen
 import ApproveRegistration from './ApproveRegistration'
 import GroupStage from './GroupStage'
 import FinalStage from './FinalStage'
 
+//Registration Stack Screen
+import PlayerList from './PlayerList'
+import PlayerDetailsApproval from './PlayerDetailsApproval'
 const Tab = createMaterialTopTabNavigator();
 const ApproveRegistrationStack = createStackNavigator();
 const GroupStageStack = createStackNavigator();
@@ -37,13 +38,26 @@ function ApproveRegistrationStackScreen({ route, navigation }) {
                 },
                 headerTintColor: '#333',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
+                    // fontWeight: 'bold',
                 },
-                headerTitleAlign: 'center'
+                headerTitleAlign: 'center',
             }}>
             <ApproveRegistrationStack.Screen
                 name="ApproveRegistration"
                 component={ApproveRegistration}
+                initialParams={{ tournament: tournament }}
+                options={{
+                }} />
+            <ApproveRegistrationStack.Screen
+                name="PlayerList"
+                component={PlayerList}
+                initialParams={{ tournament: tournament }}
+                options={{
+
+                }} />
+            <ApproveRegistrationStack.Screen
+                name="PlayerDetailsApproval"
+                component={PlayerDetailsApproval}
                 initialParams={{ tournament: tournament }}
                 options={{
 
@@ -63,7 +77,7 @@ function GroupStageStackScreen({ route }) {
                 },
                 headerTintColor: '#333',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
+                    // fontWeight: 'bold',
                 },
                 headerTitleAlign: 'center'
             }}>
@@ -89,7 +103,7 @@ function FinalStageStackScreen({ route }) {
                 },
                 headerTintColor: '#333',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
+                    // fontWeight: 'bold',
                 },
                 headerTitleAlign: 'center'
             }}>
