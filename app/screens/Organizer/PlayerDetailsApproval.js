@@ -1,17 +1,106 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { View, Text, SafeAreaView, StyleSheet, Alert, Button } from 'react-native'
+import { Avatar, Caption, Title, TouchableRipple } from 'react-native-paper'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Octicons from 'react-native-vector-icons/Octicons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import auth from '@react-native-firebase/auth'
+import axios from 'axios'
 
 export default function PlayerDetailsApproval({ route, navigation }) {
-    const { playerData } = route.params
+    const { playerData, tournamentID } = route.params
+    const [format, setFormat] = useState()
+
+    useEffect(() => {
+        getFormat()
+    }, [])
+
+    const getFormat = async () => {
+        try {
+            const res = await axios.get(`/${tournamentID}/format`)
+            setFormat(res.data)
+        } catch (error) {
+
+        }
+    }
+
     return (
-        <View style={{ flex: 1 }}>
-            <Text style={{
-                // alignSelf: 'center',
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: '#333'
-            }}>Player Details</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+            {format && format.passportPhoto == true ?
+                <View style={styles.userPhotoSection}>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                        <Avatar.Image
+                            source={{
+                                uri: playerData.passportPhoto
+                            }}
+                            size={80}
+                        />
+
+                    </View>
+                </View> : null}
+
+            {format && format.name == true ?
+                <View>
+                    <Title style={[styles.title, {
+                        marginTop: 15,
+                        marginBottom: 5,
+                        textAlign: 'center'
+                    }]}>{playerData.name}</Title>
+                </View> : null
+            }
+
+            <View style={styles.userInfoSection}>
+                {format && format.address == true ?
+                    <View style={styles.row}>
+                        <Icon name="map-marker-radius" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Address: {playerData.address}</Text>
+                    </View> : null
+                }
+                {format && format.identificationID == true ?
+                    <View style={styles.row}>
+                        <Icon name="card-account-details-outline" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>IC Number: {playerData.identificationID}</Text>
+                    </View> : null
+                }
+                {format && format.numMatric == true ?
+                    <View style={styles.row}>
+                        <Icon name="card-account-details-outline" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Matric Number: {playerData.numMatric}</Text>
+                    </View> : null
+                }
+                {format && format.numAthelete == true ?
+                    <View style={styles.row}>
+                        <Octicons name="jersey" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Athlete Number: {playerData.numAthelete}</Text>
+                    </View> : null
+                }
+                {format && format.phoneNumber == true ?
+                    <View style={styles.row}>
+                        <Icon name="phone" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Phone Number: {playerData.phoneNumber}</Text>
+                    </View> : null
+                }
+                {format && format.gender == true ?
+                    <View style={styles.row}>
+                        <Icon name="email" color="#777777" size={20} />
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Gender: {playerData.gender}</Text>
+                    </View> : null
+                }
+
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                {/* <AntDesign
+                color='#333'
+                name='deleteuser'
+                size={25}
+                backgroundColor="#fff"
+                
+            /> */}
+  
+
+            </View>
+        </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({

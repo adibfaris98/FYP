@@ -10,6 +10,7 @@ export default function GroupStage({ route, navigation }) {
     const { tournamentID } = route.params.tournament
     const [seeding, setSeeding] = useState([])
     const [fixtureGroup, setFixtureGroup] = useState([])
+    const [tables, setTables] = useState([])
 
     const [fixtureA, setFixtureA] = useState()
     const [fixtureB, setFixtureB] = useState()
@@ -29,10 +30,37 @@ export default function GroupStage({ route, navigation }) {
     const [seedingG, setSeedingG] = useState()
     const [seedingH, setSeedingH] = useState()
 
+    const [tableA, setTableA] = useState(null)
+    const [tableB, setTableB] = useState()
+    const [tableC, setTableC] = useState()
+    const [tableD, setTableD] = useState()
+    const [tableE, setTableE] = useState()
+    const [tableF, setTableF] = useState()
+    const [tableG, setTableG] = useState()
+    const [tableH, setTableH] = useState()
+
     useEffect(() => {
         getSeeding()
         getFixtureGroup()
+        getTable()
     }, [])
+
+    const getTable = async () => {
+        try {
+            const res = await axios.get(`/${tournamentID}/grouping/tables`)
+            const data = res.data
+            setTableA(data.table_A)
+            setTableB(data.table_B)
+            setTableC(data.table_C)
+            setTableD(data.table_D)
+            setTableE(data.table_E)
+            setTableF(data.table_F)
+            setTableG(data.table_G)
+            setTableH(data.table_H)
+        } catch (error) {
+
+        }
+    }
 
     const getFixtureGroup = async () => {
         try {
@@ -54,7 +82,6 @@ export default function GroupStage({ route, navigation }) {
 
     const getSeeding = async () => {
         try {
-            const array = []
             const response = await axios.get(`/${tournamentID}/seedings`)
             const data = response.data
             setSeedingA(data.group_A)
@@ -274,12 +301,12 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureA.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
+                                    <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
                                         <Card.Content>
-                                            <Paragraph style={{textAlign:"center"}} key={i}>
+                                            <Paragraph style={{ textAlign: "center" }} >
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
-                                            <Paragraph style={{textAlign:"center"}}>
+                                            <Paragraph style={{ textAlign: "center" }}>
                                                 {value.homeScore} {value.awayScore}
                                             </Paragraph>
                                         </Card.Content>
@@ -302,12 +329,12 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureB.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
+                                    <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph >
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
-                                            <Paragraph style={{textAlign:"center"}}>
+                                            <Paragraph style={{ textAlign: "center" }}>
                                                 {value.homeScore} {value.awayScore}
                                             </Paragraph>
                                         </Card.Content>
@@ -330,9 +357,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureC.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph>
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -354,9 +381,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureD.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph >
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -378,9 +405,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureE.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph >
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -402,9 +429,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureF.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph >
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -426,9 +453,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureG.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph>
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -450,9 +477,9 @@ export default function GroupStage({ route, navigation }) {
 
                             {fixtureH.map((value, i) => {
                                 return (
-                                    <Card style={{ alignItems: 'center' }}>
+                                    <Card key={i} style={{ alignItems: 'center' }}>
                                         <Card.Content>
-                                            <Paragraph key={i}>
+                                            <Paragraph>
                                                 {value.homeTeam} vs {value.awayTeam}
                                             </Paragraph>
                                         </Card.Content>
@@ -461,6 +488,127 @@ export default function GroupStage({ route, navigation }) {
                             })}
                         </View>
                         : null
+                }
+
+                <Text style={{
+                    // alignSelf: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: '#333'
+                }}>Standings</Text>
+
+                {/* Table A */}
+                {tableA != null ?
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={{
+                            // alignSelf: 'center',
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#333'
+                        }}>Group A</Text>
+                        <DataTable>
+                            <DataTable.Header>
+                                <DataTable.Title>No.</DataTable.Title>
+                                <DataTable.Title style={{flex: 2}}>Team</DataTable.Title>
+                                <DataTable.Title numeric>MP</DataTable.Title>
+                                <DataTable.Title numeric>W</DataTable.Title>
+                                <DataTable.Title numeric>D</DataTable.Title>
+                                <DataTable.Title numeric>L</DataTable.Title>
+                                <DataTable.Title numeric>Pts</DataTable.Title>
+                            </DataTable.Header>
+
+                            {tableA.map((value, i) => {
+                                return (
+                                    <DataTable.Row key={i}>
+                                        <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                        <DataTable.Cell style={{flex: 2}}>{value.teamName}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                    </DataTable.Row>
+                                )
+                            })}
+                        </DataTable>
+                    </View>
+                    : <Text>Currently there is no Standings until all games finised.</Text>
+                }
+
+                {/* Table B */}
+                {tableB != null ?
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={{
+                            // alignSelf: 'center',
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#333'
+                        }}>Group B</Text>
+                        <DataTable>
+                            <DataTable.Header>
+                                <DataTable.Title>No.</DataTable.Title>
+                                <DataTable.Title style={{flex: 2}}>Team</DataTable.Title>
+                                <DataTable.Title numeric>MP</DataTable.Title>
+                                <DataTable.Title numeric>W</DataTable.Title>
+                                <DataTable.Title numeric>D</DataTable.Title>
+                                <DataTable.Title numeric>L</DataTable.Title>
+                                <DataTable.Title numeric>Pts</DataTable.Title>
+                            </DataTable.Header>
+
+                            {tableB.map((value, i) => {
+                                return (
+                                    <DataTable.Row key={i}>
+                                        <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                        <DataTable.Cell style={{flex: 2}}>{value.teamName}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                    </DataTable.Row>
+                                )
+                            })}
+                        </DataTable>
+                    </View>
+                    : null
+                }
+
+                {/* Table C */}
+                {tableC != null ?
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={{
+                            // alignSelf: 'center',
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#333'
+                        }}>Group C</Text>
+                        <DataTable>
+                            <DataTable.Header>
+                                <DataTable.Title>No.</DataTable.Title>
+                                <DataTable.Title>Team</DataTable.Title>
+                                <DataTable.Title numeric>MP</DataTable.Title>
+                                <DataTable.Title numeric>W</DataTable.Title>
+                                <DataTable.Title numeric>D</DataTable.Title>
+                                <DataTable.Title numeric>L</DataTable.Title>
+                                <DataTable.Title numeric>Pts</DataTable.Title>
+                            </DataTable.Header>
+
+                            {tableC.map((value, i) => {
+                                return (
+                                    <DataTable.Row key={i}>
+                                        <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                        <DataTable.Cell>{value.teamName}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                        <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                    </DataTable.Row>
+                                )
+                            })}
+                        </DataTable>
+                    </View>
+                    : null
                 }
 
             </View >

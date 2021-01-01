@@ -1,15 +1,34 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Button } from 'react-native'
 import { DataTable, Card, Title, Paragraph } from 'react-native-paper'
 import axios from 'axios'
 
 export default function PlayerList({ route, navigation }) {
     const { teamID, playerList, tournamentID } = route.params
+
     useEffect(() => {
         return () => {
 
         }
     }, [])
+
+    const approveRegistration =async () =>{
+        try {
+            const res = await axios.post(`/${tournamentID}/${teamID}/approveTeamRegistration`)
+            console.log(res.data)
+        } catch (error) {
+            
+        }
+    } 
+
+    const rejectRegistration =async () =>{
+        try {
+            const res = await axios.post(`/${tournamentID}/${teamID}/rejectTeamRegistration`)
+            console.log(res.data)
+        } catch (error) {
+            
+        }
+    } 
     return (
         <View style={{ flex: 1 }}>
             <DataTable>
@@ -23,7 +42,7 @@ export default function PlayerList({ route, navigation }) {
                         <TouchableOpacity
                             key={i}
                             onPress={() => {
-                                navigation.navigate('PlayerDetailsApproval', { playerData: item })
+                                navigation.navigate('PlayerDetailsApproval', { playerData: item, tournamentID })
                             }}>
                             <DataTable.Row key={i}>
                                 <DataTable.Cell>{item.name}</DataTable.Cell>
@@ -33,14 +52,25 @@ export default function PlayerList({ route, navigation }) {
                     )
                 })}
             </DataTable>
-            <View style={styles.card}>
-                <View style={styles.cardImgWrapper}>
-                </View>
-                <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>Sukan Mahasiswa Universiti Malaya (SUKMUM)</Text>
-                    {/* <StarRating ratings={4} reviews={99} /> */}
-                    <Text style={styles.cardDetails}>Sukan for UM students</Text>
-                </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', margin: 10 }}>
+                <Button
+                    onPress={() => { 
+                        approveRegistration()
+                        navigation.navigate('ApproveRegistration')
+                    }}
+                    title="Approved"
+                    color="green"
+                    accessibilityLabel="Learn more about this purple button"
+                />
+                <Button
+                    onPress={() => {
+                        rejectRegistration()
+                        navigation.navigate('ApproveRegistration')
+                    }}
+                    title="Reject"
+                    color="red"
+                    accessibilityLabel="Learn more about this purple button"
+                />
             </View>
         </View>
     )
