@@ -1,69 +1,124 @@
+import axios from 'axios';
 import React, { useState } from 'react'
-import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from 'react-native'
+import { Button, Paragraph, Dialog, Portal, TextInput } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function ModalForm({visible}) {
-    const [modalVisible, setModalVisible] = useState(false)
+export default function ModalForm({ fixture, navigation, tournamentID, setSubmit, submit }) {
+    const [visible, setVisible] = useState(false);
+    const [awayScore, setAwayScore] = useState(fixture.awayScore);
+    const [homeScore, setHomeScore] = useState(fixture.homeScore);
+
+    const showDialog = () => setVisible(true);
+    const hideDialog = () => setVisible(false);
+
+    const submitUpdate = async () => {
+        try {
+            const newFixture = { ...fixture, awayScore, homeScore }
+            switch (fixture.bracketID) {
+                case 'fixture_A':
+                    await axios.put(`/${tournamentID}/updateMatchScoreA`, newFixture)
+                    break
+                case 'fixture_B':
+                    await axios.put(`/${tournamentID}/updateMatchScoreB`, newFixture)
+                    break
+                case 'fixture_C':
+                    await axios.put(`/${tournamentID}/updateMatchScoreC`, newFixture)
+                    break
+                case 'fixture_D':
+                    await axios.put(`/${tournamentID}/updateMatchScoreD`, newFixture)
+                    break
+                case 'final':
+                    await axios.put(`/${tournamentID}/updateMatchScoreFinal`, newFixture)
+                    break
+                case 'semiFinal1':
+                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal1`, newFixture)
+                    break
+                case 'semiFinal2':
+                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal2`, newFixture)
+                    break
+                case '3rdPlace':
+                    await axios.put(`/${tournamentID}/updateMatchScore3rdPlace`, newFixture)
+                    break
+            }
+            setSubmit(!submit)
+        } catch (error) {
+
+        }
+    }
+
+    const handleScoreChange = (text, type) => {
+        if (type == "away") {
+            setAwayScore(text)
+        }
+        if (type == "home") {
+            setHomeScore(text)
+        }
+    }
+
     return (
-        <View style={styles.view}>
-            <Modal
-                transparent={true}
-                visible={visible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                }}
-            >
-                <View style={styles.view}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Hii World!</Text>
-
-                        <TouchableHighlight
-                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
-                    </View>
+        <View>
+            <TouchableOpacity onPress={showDialog}>
+                <View style={{ alignItems: 'flex-end' }}>
+                    <MaterialCommunityIcons
+                        name="square-edit-outline"
+                        size={30}
+                        color="#6B46C1" />
                 </View>
-            </Modal>
+            </TouchableOpacity>
+            <Portal>
+                <Dialog visible={visible} onDismiss={hideDialog} style={{ padding: 10 }}>
+                    <Dialog.Title style={{ alignSelf: 'center' }}>Update Result</Dialog.Title>
+                    <Dialog.Content style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+                        <View style={{ alignSelf: 'center' }}>
+                            <Paragraph style={{ fontSize: 16, fontWeight: 'bold' }}>{fixture.homeTeam}</Paragraph>
+                            <TextInput
+                                value={String(homeScore)}
+                                onChangeText={(text) => handleScoreChange(text, "home")}
+                                style={{
+                                    alignSelf: 'center',
+                                    fontSize: 35,
+                                    marginTop: 5,
+                                    fontWeight: 'bold',
+                                    width: 50
+                                }}
+                            />
+                        </View>
+
+                        <View style={{ alignSelf: 'center' }}>
+                            <Paragraph style={{
+                                alignSelf: 'center',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#333'
+                            }}>vs</Paragraph>
+                        </View>
+
+                        <View style={{ alignSelf: 'center' }}>
+                            <Paragraph style={{ fontSize: 16, fontWeight: 'bold' }}>{fixture.awayTeam}</Paragraph>
+                            <TextInput
+                                value={String(awayScore)}
+                                onChangeText={(text) => handleScoreChange(text, "away")}
+                                style={{
+                                    alignSelf: 'center',
+                                    fontSize: 35,
+                                    marginTop: 5,
+                                    fontWeight: 'bold',
+                                    width: 50
+                                }}
+                            />
+                        </View>
+
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => {
+                            hideDialog()
+                            submitUpdate()
+                        }}>Update</Button>
+                        <Button onPress={hideDialog}>Cancel</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    view: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
-    },
-    openButton: {
-        backgroundColor: "#115454",
-        borderRadius: 5,
-        padding: 15,
-        elevation: 2
-    },
-    textStyle: {
-        color: "white",
-        textAlign: "center",
-    },
-    modalText: {
-        marginBottom: 15,
-    }
-});

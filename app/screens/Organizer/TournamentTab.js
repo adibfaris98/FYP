@@ -11,6 +11,10 @@ import FinalStage from './FinalStage'
 //Registration Stack Screen
 import PlayerList from './PlayerList'
 import PlayerDetailsApproval from './PlayerDetailsApproval'
+
+// Group Stage Screen
+import EditFixture from './EditFixture'
+
 const Tab = createMaterialTopTabNavigator();
 const ApproveRegistrationStack = createStackNavigator();
 const GroupStageStack = createStackNavigator();
@@ -47,6 +51,7 @@ function ApproveRegistrationStackScreen({ route, navigation }) {
                 component={ApproveRegistration}
                 initialParams={{ tournament: tournament }}
                 options={{
+                    
                 }} />
             <ApproveRegistrationStack.Screen
                 name="PlayerList"
@@ -84,6 +89,13 @@ function GroupStageStackScreen({ route }) {
             <GroupStageStack.Screen
                 name="GroupStage"
                 component={GroupStage}
+                initialParams={{ tournament: tournament }}
+                options={{
+
+                }} />
+            <GroupStageStack.Screen
+                name="EditFixture"
+                component={EditFixture}
                 initialParams={{ tournament: tournament }}
                 options={{
 

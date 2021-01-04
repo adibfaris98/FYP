@@ -1,76 +1,27 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
-import StarRating from '../components/StarRating'
+import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { DataTable, Card, Title, Paragraph, Button, Dialog, Portal } from 'react-native-paper'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ModalForm from './ModalForm';
 
-export default function FixtureCard({ itemData, onPress }) {
+export default function FixtureCard({ fixture, i, tournamentID, setSubmit, submit }) {
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.card}>
-                <View style={styles.cardImgWrapper}>
-                    <Image
-                        source={{
-                            uri: itemData.photoURL
-                        }}
-                        resizeMode="cover"
-                        style={styles.cardImg}
-                    />
-                </View>
-                <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>{itemData.title}</Text>
-                    <StarRating ratings={itemData.ratings} reviews={itemData.reviews} />
-                    <Text numberOfLines={2} style={styles.cardDetails}>{itemData.description}</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
+        <Card key={i} style={{ borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
+            <ModalForm fixture={fixture} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+            {fixture.isMatchStart == true && fixture.isFulltime == false ?
+                <Paragraph>Live</Paragraph> : null
+            }
+            <Card.Content style={{ alignItems: 'center' }}>
+                <Paragraph>
+                    {fixture.homeTeam} vs {fixture.awayTeam}
+                </Paragraph>
+                <Paragraph>
+                    {fixture.homeScore} {fixture.awayScore}
+                </Paragraph>
+                {fixture.isMatchStart == true && fixture.isFulltime == true ?
+                    <Paragraph>Full Time</Paragraph> : null
+                }
+            </Card.Content>
+        </Card>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    wrapper: {},
-    cardsWrapper: {
-        marginTop: 10,
-        width: '90%',
-        alignSelf: 'center',
-    },
-    card: {
-        height: 100,
-        marginVertical: 10,
-        flexDirection: 'row',
-        shadowColor: '#999',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
-    },
-    cardImgWrapper: {
-        flex: 1,
-    },
-    cardImg: {
-        height: '100%',
-        width: '100%',
-        alignSelf: 'center',
-        borderRadius: 8,
-        borderBottomRightRadius: 0,
-        borderTopRightRadius: 0,
-    },
-    cardInfo: {
-        flex: 2,
-        padding: 10,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderLeftWidth: 0,
-        borderBottomRightRadius: 8,
-        borderTopRightRadius: 8,
-        backgroundColor: '#fff',
-    },
-    cardTitle: {
-        fontWeight: 'bold',
-    },
-    cardDetails: {
-        fontSize: 12,
-        color: '#444',
-    },
-})

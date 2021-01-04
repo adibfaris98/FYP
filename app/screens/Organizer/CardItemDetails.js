@@ -210,15 +210,15 @@ export default function CardItemDetails({ route, navigation }) {
                             <View style={[styles.section]}>
                                 <DataTable>
                                     <DataTable.Header>
-                                        <DataTable.Title>No.</DataTable.Title>
-                                        <DataTable.Title>Team Name</DataTable.Title>
+                                        <DataTable.Title style={{ flex: 1 }}>No.</DataTable.Title>
+                                        <DataTable.Title style={{ flex: 2 }}>Team Name</DataTable.Title>
                                         <DataTable.Title>Manager Name</DataTable.Title>
                                     </DataTable.Header>
                                     {officialTeam.map((value, i) => {
                                         return (
                                             <DataTable.Row key={i}>
-                                                <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                                <DataTable.Cell>{value.teamName}</DataTable.Cell>
+                                                <DataTable.Cell style={{ flex: 1 }}>{i + 1}</DataTable.Cell>
+                                                <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
                                                 <DataTable.Cell>{value.managerName}</DataTable.Cell>
                                             </DataTable.Row>
                                         )
@@ -419,49 +419,50 @@ export default function CardItemDetails({ route, navigation }) {
                 }
 
                 <View style={[styles.section]}>
-                    <Text style={{
-                        // alignSelf: 'center',
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        color: '#333'
-                    }}>Standings</Text>
-
                     {/* Table A */}
                     {tableA != null ?
-                        <View style={[styles.section], { margin: 0, padding: 0 }}>
+                        <View>
                             <Text style={{
                                 // alignSelf: 'center',
                                 fontSize: 18,
                                 fontWeight: 'bold',
                                 color: '#333'
-                            }}>Group A</Text>
-                            <DataTable>
-                                <DataTable.Header>
-                                    <DataTable.Title>No.</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
-                                    <DataTable.Title numeric>MP</DataTable.Title>
-                                    <DataTable.Title numeric>W</DataTable.Title>
-                                    <DataTable.Title numeric>D</DataTable.Title>
-                                    <DataTable.Title numeric>L</DataTable.Title>
-                                    <DataTable.Title numeric>Pts</DataTable.Title>
-                                </DataTable.Header>
+                            }}>Standings</Text>
+                            <View style={[styles.section], { margin: 0, padding: 0 }}>
+                                <Text style={{
+                                    // alignSelf: 'center',
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#333'
+                                }}>Group A</Text>
+                                <DataTable>
+                                    <DataTable.Header>
+                                        <DataTable.Title>No.</DataTable.Title>
+                                        <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
+                                        <DataTable.Title numeric>MP</DataTable.Title>
+                                        <DataTable.Title numeric>W</DataTable.Title>
+                                        <DataTable.Title numeric>D</DataTable.Title>
+                                        <DataTable.Title numeric>L</DataTable.Title>
+                                        <DataTable.Title numeric>Pts</DataTable.Title>
+                                    </DataTable.Header>
 
-                                {tableA.map((value, i) => {
-                                    return (
-                                        <DataTable.Row key={i}>
-                                            <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.win}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.points}</DataTable.Cell>
-                                        </DataTable.Row>
-                                    )
-                                })}
-                            </DataTable>
+                                    {tableA.map((value, i) => {
+                                        return (
+                                            <DataTable.Row key={i}>
+                                                <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                                <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                            </DataTable.Row>
+                                        )
+                                    })}
+                                </DataTable>
+                            </View>
                         </View>
-                        : <Text>Currently there is no Standings until all games finised.</Text>
+                        : null
                     }
 
                     {/* Table B */}
@@ -539,7 +540,6 @@ export default function CardItemDetails({ route, navigation }) {
                         </View>
                         : null
                     }
-
                 </View>
 
                 <View style={styles.section}>
@@ -578,43 +578,43 @@ export default function CardItemDetails({ route, navigation }) {
                 group-stage is updated.</Text>
                     }
 
-                    <Text style={{
-                        // alignSelf: 'center',
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        color: '#333'
-                    }}>Tournament Fixtures</Text>
-
                     {fixture_semi && fixture_semi != null ?
-                        <View style={[styles.section]}>
+                        <View>
                             <Text style={{
                                 // alignSelf: 'center',
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: 'bold',
                                 color: '#333'
-                            }}>Semi Final</Text>
+                            }}>Tournament Fixtures</Text>
+                            <View style={[styles.section]}>
+                                <Text style={{
+                                    // alignSelf: 'center',
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: '#333'
+                                }}>Semi Final</Text>
 
-                            {fixture_semi.map((value, i) => {
-                                return (
-                                    <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                        <Card.Content>
-                                            <Paragraph style={{ textAlign: "center" }} >
-                                                {value.homeTeam} vs {value.awayTeam}
-                                            </Paragraph>
-                                            <Paragraph style={{ textAlign: "center" }}>
-                                                {value.homeScore} {value.awayScore}
-                                            </Paragraph>
-                                        </Card.Content>
-                                    </Card>
-                                )
-                            })}
+                                {fixture_semi.map((value, i) => {
+                                    return (
+                                        <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
+                                            <Card.Content>
+                                                <Paragraph style={{ textAlign: "center" }} >
+                                                    {value.homeTeam} vs {value.awayTeam}
+                                                </Paragraph>
+                                                <Paragraph style={{ textAlign: "center" }}>
+                                                    {value.homeScore} {value.awayScore}
+                                                </Paragraph>
+                                            </Card.Content>
+                                        </Card>
+                                    )
+                                })}
+                            </View>
                         </View>
-
                         : null
                     }
 
                     {fixture_3rd && fixture_3rd != null ?
-                        <View>
+                        <View style={[styles.section]}>
                             <Text style={{
                                 // alignSelf: 'center',
                                 fontSize: 16,
@@ -637,12 +637,11 @@ export default function CardItemDetails({ route, navigation }) {
                                 )
                             })}
                         </View>
-
                         : null
                     }
 
                     {fixture_final && fixture_final != null ?
-                        <View>
+                        <View style={[styles.section]}>
                             <Text style={{
                                 // alignSelf: 'center',
                                 fontSize: 16,

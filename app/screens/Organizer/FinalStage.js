@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DataTable, Card, Title, Paragraph } from 'react-native-paper'
 import axios from 'axios'
+import FixtureCard from '../../components/FixtureCard';
 
 export default function FinalStage({ route, navigation }) {
     const { tournamentID, gGroupNumber } = route.params.tournament
@@ -16,13 +17,12 @@ export default function FinalStage({ route, navigation }) {
     const [fixture_3rd, setFixture_3rd] = useState()
     const [fixture_final, setFixture_final] = useState()
 
+    const [submit,setSubmit] = useState(false)
+
     useEffect(() => {
         getParticipants()
         getFixture()
-        return () => {
-
-        }
-    }, [])
+    }, [submit])
 
     const getParticipants = async () => {
         try {
@@ -101,21 +101,9 @@ export default function FinalStage({ route, navigation }) {
                         }}>Semi Final</Text>
 
                         {fixture_semi.map((value, i) => {
-                            return (
-                                <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                    <Card.Content>
-                                        <Paragraph style={{ textAlign: "center" }} >
-                                            {value.homeTeam} vs {value.awayTeam}
-                                        </Paragraph>
-                                        <Paragraph style={{ textAlign: "center" }}>
-                                            {value.homeScore} {value.awayScore}
-                                        </Paragraph>
-                                    </Card.Content>
-                                </Card>
-                            )
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                         })}
                     </View>
-
                     : null
                 }
 
@@ -129,18 +117,7 @@ export default function FinalStage({ route, navigation }) {
                         }}>3rd Place</Text>
 
                         {fixture_3rd.map((value, i) => {
-                            return (
-                                <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                    <Card.Content>
-                                        <Paragraph style={{ textAlign: "center" }} >
-                                            {value.homeTeam} vs {value.awayTeam}
-                                        </Paragraph>
-                                        <Paragraph style={{ textAlign: "center" }}>
-                                            {value.homeScore} {value.awayScore}
-                                        </Paragraph>
-                                    </Card.Content>
-                                </Card>
-                            )
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                         })}
                     </View>
 
@@ -157,18 +134,7 @@ export default function FinalStage({ route, navigation }) {
                         }}>Final</Text>
 
                         {fixture_final.map((value, i) => {
-                            return (
-                                <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                    <Card.Content>
-                                        <Paragraph style={{ textAlign: "center" }} >
-                                            {value.homeTeam} vs {value.awayTeam}
-                                        </Paragraph>
-                                        <Paragraph style={{ textAlign: "center" }}>
-                                            {value.homeScore} {value.awayScore}
-                                        </Paragraph>
-                                    </Card.Content>
-                                </Card>
-                            )
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                         })}
                     </View>
                     : null
