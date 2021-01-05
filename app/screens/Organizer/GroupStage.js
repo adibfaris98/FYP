@@ -324,7 +324,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group B</Text>
 
                             {fixtureB.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                             })}
                         </View>
                         : null
@@ -341,7 +341,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group C</Text>
 
                             {fixtureC.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                             })}
                         </View>
                         : null
@@ -357,7 +357,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group D</Text>
 
                             {fixtureD.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
                             })}
                         </View>
                         : null
@@ -373,7 +373,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group E</Text>
 
                             {fixtureE.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                             })}
                         </View>
                         : null
@@ -389,7 +389,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group F</Text>
 
                             {fixtureF.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
                             })}
                         </View>
                         : null
@@ -405,7 +405,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group G</Text>
 
                             {fixtureG.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
                             })}
                         </View>
                         : null
@@ -421,7 +421,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group H</Text>
 
                             {fixtureH.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
                             })}
                         </View>
                         : null

@@ -9,6 +9,7 @@ import 'react-native-gesture-handler';
 // import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 import React from 'react';
 
@@ -37,7 +38,9 @@ const Drawer = createDrawerNavigator();
 
 function App() {
   return (
-    <Providers />
+    <PaperProvider>
+      <Providers />
+    </PaperProvider>
   )
 };
 

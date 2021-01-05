@@ -15,33 +15,38 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
     const submitUpdate = async () => {
         try {
             const newFixture = { ...fixture, awayScore, homeScore }
-            switch (fixture.bracketID) {
+            switch (fixture.fixtureID) {
                 case 'fixture_A':
                     await axios.put(`/${tournamentID}/updateMatchScoreA`, newFixture)
+                    setSubmit(!submit)
                     break
                 case 'fixture_B':
                     await axios.put(`/${tournamentID}/updateMatchScoreB`, newFixture)
+                    setSubmit(!submit)
                     break
                 case 'fixture_C':
                     await axios.put(`/${tournamentID}/updateMatchScoreC`, newFixture)
+                    setSubmit(!submit)
                     break
                 case 'fixture_D':
                     await axios.put(`/${tournamentID}/updateMatchScoreD`, newFixture)
+                    setSubmit(!submit)
                     break
                 case 'final':
                     await axios.put(`/${tournamentID}/updateMatchScoreFinal`, newFixture)
-                    break
-                case 'semiFinal1':
-                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal1`, newFixture)
-                    break
-                case 'semiFinal2':
-                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal2`, newFixture)
+                    setSubmit(!submit)
                     break
                 case '3rdPlace':
-                    await axios.put(`/${tournamentID}/updateMatchScore3rdPlace`, newFixture)
+                    await axios.put(`/${tournamentID}/updateMatchScoreThird`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'semiFinal1':
+                case 'semiFinal2':
+                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
+                    setSubmit(!submit)
                     break
             }
-            setSubmit(!submit)
+
         } catch (error) {
 
         }

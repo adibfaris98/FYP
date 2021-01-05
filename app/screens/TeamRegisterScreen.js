@@ -13,7 +13,7 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { DataTable } from 'react-native-paper'
+import { DataTable} from 'react-native-paper'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
 
@@ -159,14 +159,14 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     <DataTable.Title>IC No.</DataTable.Title>
                 </DataTable.Header>
 
-                {listPlayers.map((item,i) => (
+                {listPlayers.map((item, i) => (
                     <TouchableOpacity
                         key={i}
                         onPress={() => {
                             navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, format })
                         }}>
                         <DataTable.Row>
-                            <DataTable.Cell>{i+1}</DataTable.Cell>
+                            <DataTable.Cell>{i + 1}</DataTable.Cell>
                             <DataTable.Cell>{item.name}</DataTable.Cell>
                             <DataTable.Cell>{item.identificationID}</DataTable.Cell>
                         </DataTable.Row>
@@ -327,8 +327,7 @@ export default function TeamRegisterScreen({ route, navigation }) {
                                             getTeam()
                                             setModalVisible(!modalVisible);
                                             // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                        }}
-                                    >
+                                        }}>
                                         <Text style={styles.textStyle}>ADD</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -336,8 +335,7 @@ export default function TeamRegisterScreen({ route, navigation }) {
                                         onPress={() => {
                                             setModalVisible(!modalVisible);
                                             // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                        }}
-                                    >
+                                        }}>
                                         <Text style={styles.textStyle}>CANCEL</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -346,20 +344,16 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     </Modal>
                 </View>
 
-
                 <Modal
                     animationType="slide"
                     transparent={true}
                     visible={modalVisible2}
                     onRequestClose={() => {
                         Alert.alert("Modal has been closed.");
-                    }}
-                >
+                    }}>
                     <View style={styles.view}>
                         <View style={styles.modalView}>
-
                             <Text style={styles.title}>Player Information</Text>
-
                             <TouchableOpacity
                                 style={{ ...styles.openButton, backgroundColor: "red" }}
                                 onPress={() => {
@@ -369,11 +363,9 @@ export default function TeamRegisterScreen({ route, navigation }) {
                             >
                                 <Text style={styles.textStyle}>CANCEL</Text>
                             </TouchableOpacity>
-
                         </View>
                     </View>
                 </Modal>
-
 
                 <DataTable.Pagination
                     page={1}
@@ -381,20 +373,16 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     onPageChange={page => {
                         console.log(page);
                     }}
-                    label="1-2 of 6"
-                />
+                    label="1-2 of 6" />
             </DataTable>
 
             <TouchableOpacity
                 style={{ ...styles.openButton, backgroundColor: "green" }}
                 onPress={() => {
                     navigation.navigate('CardItemDetails')
-                }}
-            >
+                }}>
                 <Text style={styles.textStyle}>Submit</Text>
             </TouchableOpacity>
-
-
         </View>
     )
 }
