@@ -109,7 +109,7 @@ export default function GroupStage({ route, navigation }) {
 
     return (
         <ScrollView>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 , padding:5}}>
                 <Text style={{
                     // alignSelf: 'center',
                     fontSize: 18,
@@ -310,7 +310,7 @@ export default function GroupStage({ route, navigation }) {
                                 return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                             })}
                         </View>
-                        : null
+                        : <Text>Currently there is no Fixture until draw fixture finised.</Text>
                 }
 
                 {

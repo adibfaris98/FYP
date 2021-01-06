@@ -9,11 +9,11 @@ import axios from 'axios'
 export default function ApproveRegistration({ route, navigation }) {
     const { tournamentID } = route.params.tournament
     const [pendingList, setPendingList] = useState(null)
+    const [submit, setSubmit] = useState(false)
 
     useEffect(() => {
         getPendingList()
-        console.log(pendingList)
-    }, [])
+    }, [submit])
 
     const getPendingList = async () => {
         try {
@@ -26,7 +26,7 @@ export default function ApproveRegistration({ route, navigation }) {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 , padding:5 }}>
             {pendingList && pendingList != null ?
                 <DataTable>
                     <DataTable.Header>
@@ -39,7 +39,7 @@ export default function ApproveRegistration({ route, navigation }) {
                         <TouchableOpacity
                             key={i}
                             onPress={() => {
-                                navigation.navigate('PlayerList', { teamID: item.uid, playerList: item.playerList, tournamentID })
+                                navigation.navigate('PlayerList', { teamID: item.uid, playerList: item.playerList, tournamentID, submit, setSubmit })
                             }}
                         >
                             <DataTable.Row key={i}>

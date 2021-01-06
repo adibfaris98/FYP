@@ -10,14 +10,14 @@ import FixtureCard from '../../components/FixtureCard';
 export default function FinalStage({ route, navigation }) {
     const { tournamentID, gGroupNumber } = route.params.tournament
     const [participants, setParticipant] = useState(null)
-    const [finalStageList_semi, setFinalStageList_semi] = useState()
-    const [finalStageList_quarter, setFinalStageList_quarter] = useState()
-    const [finalStageList_round16, setFinalStageList_round16] = useState()
-    const [fixture_semi, setFixture_semi] = useState()
-    const [fixture_3rd, setFixture_3rd] = useState()
-    const [fixture_final, setFixture_final] = useState()
+    const [finalStageList_semi, setFinalStageList_semi] = useState(null)
+    const [finalStageList_quarter, setFinalStageList_quarter] = useState(null)
+    const [finalStageList_round16, setFinalStageList_round16] = useState(null)
+    const [fixture_semi, setFixture_semi] = useState(null)
+    const [fixture_3rd, setFixture_3rd] = useState(null)
+    const [fixture_final, setFixture_final] = useState(null)
 
-    const [submit,setSubmit] = useState(false)
+    const [submit, setSubmit] = useState(false)
 
     useEffect(() => {
         getParticipants()
@@ -54,7 +54,13 @@ export default function FinalStage({ route, navigation }) {
     }
     return (
         <ScrollView>
-            <View>
+            <View style={{padding: 5 , flex:1}}>
+                <Text style={{
+                    // alignSelf: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: '#333'
+                }}>Qualified Team</Text>
                 {finalStageList_semi && finalStageList_semi != null ?
                     <DataTable>
                         <DataTable.Header>
@@ -78,10 +84,7 @@ export default function FinalStage({ route, navigation }) {
                             <DataTable.Cell>{finalStageList_semi.group_A2.teamName}</DataTable.Cell>
                         </DataTable.Row>
                     </DataTable>
-                    : <Text>  Currently final-stage participants list is empty.
-                    Kindly go to the to finalize qualified
-                    team in standings. Make sure all the results in the
-                group-stage is updated.</Text>
+                    : <Text>Currently final-stage participants list is empty. Kindly go to the to finalize qualified team in standings. Make sure all the results in the group-stage is updated.</Text>
                 }
 
                 <Text style={{
@@ -89,10 +92,11 @@ export default function FinalStage({ route, navigation }) {
                     fontSize: 18,
                     fontWeight: 'bold',
                     color: '#333'
-                }}>Tournament Fixtures</Text>
+                }}>Fixtures</Text>
 
                 {fixture_semi && fixture_semi != null ?
                     <View>
+
                         <Text style={{
                             // alignSelf: 'center',
                             fontSize: 16,
@@ -104,7 +108,7 @@ export default function FinalStage({ route, navigation }) {
                             return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
                         })}
                     </View>
-                    : null
+                    : <Text>Currently not available.</Text>
                 }
 
                 {fixture_3rd && fixture_3rd != null ?

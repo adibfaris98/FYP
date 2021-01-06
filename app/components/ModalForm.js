@@ -4,7 +4,7 @@ import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, TouchableOpac
 import { Button, Paragraph, Dialog, Portal, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function ModalForm({ fixture, navigation, tournamentID, setSubmit, submit }) {
+export default function ModalForm({ fixture, navigation, tournamentID, setSubmit, submit, isMatchStart, setIsFullTime }) {
     const [visible, setVisible] = useState(false);
     const [awayScore, setAwayScore] = useState(fixture.awayScore);
     const [homeScore, setHomeScore] = useState(fixture.homeScore);
@@ -14,7 +14,7 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
 
     const submitUpdate = async () => {
         try {
-            const newFixture = { ...fixture, awayScore, homeScore }
+            const newFixture = { ...fixture, awayScore, homeScore, isFulltime: false, isMatchStart }
             switch (fixture.fixtureID) {
                 case 'fixture_A':
                     await axios.put(`/${tournamentID}/updateMatchScoreA`, newFixture)
@@ -52,6 +52,46 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
         }
     }
 
+    const finisedMatch = async () => {
+        try {
+            const newFixture = { ...fixture, awayScore, homeScore, isFulltime: true, isMatchStart}
+            switch (fixture.fixtureID) {
+                case 'fixture_A':
+                    await axios.put(`/${tournamentID}/finishedMatchA`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'fixture_B':
+                    await axios.put(`/${tournamentID}/finishedMatchB`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'fixture_C':
+                    await axios.put(`/${tournamentID}/finishedMatchC`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'fixture_D':
+                    await axios.put(`/${tournamentID}/finishedMatchD`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'final':
+                    await axios.put(`/${tournamentID}/updateMatchScoreFinal`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case '3rdPlace':
+                    await axios.put(`/${tournamentID}/updateMatchScoreThird`, newFixture)
+                    setSubmit(!submit)
+                    break
+                case 'semiFinal1':
+                case 'semiFinal2':
+                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
+                    setSubmit(!submit)
+                    break
+            }
+
+        } catch (error) {
+
+        }
+    }
+
     const handleScoreChange = (text, type) => {
         if (type == "away") {
             setAwayScore(text)
@@ -67,7 +107,7 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
                 <View style={{ alignItems: 'flex-end' }}>
                     <MaterialCommunityIcons
                         name="square-edit-outline"
-                        size={30}
+                        size={35}
                         color="#6B46C1" />
                 </View>
             </TouchableOpacity>
@@ -115,6 +155,12 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
                         </View>
 
                     </Dialog.Content>
+
+                    <Button mode="contained" onPress={() => {
+                        hideDialog()
+                        setIsFullTime(true)
+                        finisedMatch()
+                    }}>Match Finished</Button>
                     <Dialog.Actions>
                         <Button onPress={() => {
                             hideDialog()
