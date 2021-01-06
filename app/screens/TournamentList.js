@@ -1,13 +1,13 @@
+import Axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { View, Text, Button, StyleSheet, FlatList } from 'react-native'
-import auth from '@react-native-firebase/auth'
-import Card from '../components/Card'
 import { data } from '../model/data'
 import axios from 'axios'
 
-export default function Tournament({ navigation }) {
+import Card from '../components/Card'
 
-    const currentUser = auth().currentUser.uid;
+export default function TournamentList({ navigation }) {
+
     const [tournament, setTournament] = useState(null)
 
     useEffect(() => {
@@ -16,20 +16,20 @@ export default function Tournament({ navigation }) {
 
     async function getTournament() {
         try {
-            const response = await axios.get(`/manager/${currentUser}/tournament`);
+            const response = await axios.get('/tournament');
             setTournament(response.data)
         } catch (error) {
             console.error(error);
         }
     }
-    
+
     const renderItem = ({ item }) => {
+        // console.log(item)
         return (
             <Card
                 itemData={item}
                 onPress={() => navigation.navigate('TournamentDetails', { itemData: item })}
-                keyExtractor={item => item.tournamentID} 
-                />
+            />
         )
     }
 

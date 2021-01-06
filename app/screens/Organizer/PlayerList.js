@@ -4,7 +4,7 @@ import { DataTable, Card, Title, Paragraph } from 'react-native-paper'
 import axios from 'axios'
 
 export default function PlayerList({ route, navigation }) {
-    const { teamID, playerList, tournamentID } = route.params
+    const { teamID, playerList, tournamentID , submit, setSubmit } = route.params
 
     useEffect(() => {
         return () => {
@@ -55,6 +55,7 @@ export default function PlayerList({ route, navigation }) {
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', margin: 10 }}>
                 <Button
                     onPress={() => { 
+                        setSubmit(!submit)
                         approveRegistration()
                         navigation.navigate('ApproveRegistration')
                     }}
@@ -64,6 +65,7 @@ export default function PlayerList({ route, navigation }) {
                 />
                 <Button
                     onPress={() => {
+                        setSubmit(!submit)
                         rejectRegistration()
                         navigation.navigate('ApproveRegistration')
                     }}

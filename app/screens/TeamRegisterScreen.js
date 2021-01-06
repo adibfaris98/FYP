@@ -13,7 +13,7 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import Animated from 'react-native-reanimated'
 import ImagePicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { DataTable} from 'react-native-paper'
+import { DataTable } from 'react-native-paper'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
 
@@ -36,13 +36,13 @@ export default function TeamRegisterScreen({ route, navigation }) {
     const [phoneNumber, setPhoneNum] = useState(null)
     const [gender, setGender] = useState(null)
     const [format, setFormat] = useState(null)
+    const [submit, setSubmit] = useState(false)
+    const [remove, setRemove] = useState(false)
 
     useEffect(() => {
         getTeam()
         getFormat()
-        console.log(listPlayers)
-        console.log(teamName)
-    }, [])
+    }, [submit, remove])
 
     const getTeam = async () => {
         try {
@@ -163,7 +163,7 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     <TouchableOpacity
                         key={i}
                         onPress={() => {
-                            navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, format })
+                            navigation.navigate('PlayerDetailsScreen', { playerDetails: item, tournamentID, listPlayers, format, submit, setSubmit, remove, setRemove })
                         }}>
                         <DataTable.Row>
                             <DataTable.Cell>{i + 1}</DataTable.Cell>
@@ -323,6 +323,7 @@ export default function TeamRegisterScreen({ route, navigation }) {
                                     <TouchableOpacity
                                         style={{ ...styles.openButton, backgroundColor: "green" }}
                                         onPress={() => {
+                                            setSubmit(!submit)
                                             addPlayer()
                                             getTeam()
                                             setModalVisible(!modalVisible);
@@ -379,7 +380,7 @@ export default function TeamRegisterScreen({ route, navigation }) {
             <TouchableOpacity
                 style={{ ...styles.openButton, backgroundColor: "green" }}
                 onPress={() => {
-                    navigation.navigate('CardItemDetails')
+                    navigation.navigate('TournamentDetails')
                 }}>
                 <Text style={styles.textStyle}>Submit</Text>
             </TouchableOpacity>

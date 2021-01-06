@@ -17,8 +17,8 @@ import Tournament from './Tournament'
 import LoginScreen from './LoginScreen';
 
 //home
-import CardListScreen from './CardListScreen';
-import CardItemDetails from './CardItemDetails';
+import CardListScreen from './TournamentList';
+import CardItemDetails from './TournamentDetails';
 
 //tournament
 import TeamRegisterScreen from './TeamRegisterScreen'
@@ -28,6 +28,9 @@ import PlayerRegisterScreen from './PlayerRegisterScreen'
 
 //profile
 import EditProfileScreen from './EditProfileScreen';
+import EventList from './EventList';
+import TournamentList from './TournamentList';
+import TournamentDetails from './TournamentDetails';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -148,15 +151,23 @@ const HomeStackScreen = ({ navigation }) => {
                 })}
             />
             <HomeStack.Screen
-                name="CardListScreen"
-                component={CardListScreen}
+                name="EventList"
+                component={EventList}
+                options={({ route }) => ({
+                    title: route.params.title
+                })}
+            />
+
+            <HomeStack.Screen
+                name="TournamentList"
+                component={TournamentList}
                 options={({ route }) => ({
                     title: route.params.title
                 })}
             />
             <HomeStack.Screen
-                name="CardItemDetails"
-                component={CardItemDetails}
+                name="TournamentDetails"
+                component={TournamentDetails}
                 options={({ route }) => ({
                     // title: route.params.title
                     headerBackTitleVisible: false,
@@ -237,7 +248,7 @@ const TournamentStackScreen = ({ navigation }) => {
                     headerTintColor: '#fff'
                 })}
             />
-             <TournamentStack.Screen
+            <TournamentStack.Screen
                 name="TeamRegisterScreen"
                 component={TeamRegisterScreen}
                 options={({ route }) => ({

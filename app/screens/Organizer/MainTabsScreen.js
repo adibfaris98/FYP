@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, Image } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Avatar } from 'react-native-paper';
@@ -17,8 +17,6 @@ import Tournament from './TournamentScreen'
 import LoginScreen from '../LoginScreen'
 
 //home stack screen
-import CardItemDetails from './CardItemDetails';
-import CardListScreen from './CardListScreen'
 
 //tournament
 import TeamRegisterScreen from './TeamRegisterScreen'
@@ -29,6 +27,10 @@ import TournamentTab from './TournamentTab'
 
 //profile stack screen
 import EditProfileScreen from './EditProfileScreen';
+import TournamentList from './TournamentList';
+import TournamentDetails from './TournamentDetails';
+import EventList from './EventList';
+import EventDetails from './EventDetails';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -126,7 +128,19 @@ const HomeStackScreen = ({ navigation }) => {
                                 backgroundColor="#fff"
                                 onPress={() => { }}>
                             </Icon.Button> */}
-                            <Text>Organizer</Text>
+                            <Image
+                                style={{
+                                    // backgroundColor:'red',
+                                    borderColor: 'red',
+                                    borderWidth: 1,
+                                    width: 100,
+                                    height: 50,
+                                }}
+                                
+                                source={{
+                                    uri: 'https://firebasestorage.googleapis.com/v0/b/sports-management-system-v2.appspot.com/o/website%2Flogo-organizer.svg?alt=media&token=ae413f4a-bde9-4bda-b857-4b61747fb80d',
+                                }}
+                            />
                             <TouchableOpacity
                                 style={{ paddingHorizontal: 10, marginTop: 5 }}
                                 onPress={() => navigation.navigate('Profile')}>
@@ -149,15 +163,33 @@ const HomeStackScreen = ({ navigation }) => {
                 })}
             />
             <HomeStack.Screen
-                name="CardListScreen"
-                component={CardListScreen}
+                name="TournamentList"
+                component={TournamentList}
                 options={({ route }) => ({
                     title: route.params.title
                 })}
             />
             <HomeStack.Screen
-                name="CardItemDetails"
-                component={CardItemDetails}
+                name="TournamentDetails"
+                component={TournamentDetails}
+                options={({ route }) => ({
+                    // title: route.params.title
+                    headerBackTitleVisible: false,
+                    headerTitle: false,
+                    headerTransparent: true,
+                    headerTintColor: '#fff'
+                })}
+            />
+            <HomeStack.Screen
+                name="EventList"
+                component={EventList}
+                options={({ route }) => ({
+                    title: route.params.title
+                })}
+            />
+            <HomeStack.Screen
+                name="EventDetails"
+                component={EventDetails}
                 options={({ route }) => ({
                     // title: route.params.title
                     headerBackTitleVisible: false,
@@ -229,8 +261,8 @@ const TournamentStackScreen = ({ navigation }) => {
                 }}
             />
             <TournamentStack.Screen
-                name="CardItemDetails"
-                component={CardItemDetails}
+                name="TournamentDetails"
+                component={TournamentDetails}
                 options={({ route }) => ({
                     // title: route.params.title
                     headerBackTitleVisible: false,

@@ -12,9 +12,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 export default function PlayerDetailsScreen({ route, navigation }) {
     const currentUser = auth().currentUser.uid;
     const player = route.params.playerDetails
-    const tournamentID = route.params.tournamentID
-    const format = route.params.format
+    // const tournamentID = route.params.tournamentID
+    // const format = route.params.format
 
+    const { tournamentID, format, remove , setRemove} = route.params
+
+    // const removePlayer =()=>{
+    //     setRemove(!remove)
+    // }
+
+    useEffect(() => {
+        // console.log(remove)
+    })
     const deletePlayer = async () => {
         try {
             const response = await axios.delete(`/${tournamentID}/${currentUser}/player/${player.identificationID}`);
@@ -43,7 +52,7 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                     <Title style={[styles.title, {
                         marginTop: 15,
                         marginBottom: 5,
-                        textAlign:'center'
+                        textAlign: 'center'
                     }]}>{player.name}</Title>
                 </View> : null
             }
@@ -105,6 +114,7 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                                 {
                                     text: "OK",
                                     onPress: () => {
+                                        setRemove(!remove)
                                         deletePlayer()
                                         navigation.navigate('TeamRegisterScreen')
                                         // getTeam()
@@ -113,13 +123,6 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                             ],
                             { cancelable: false }
                         );
-                    }}
-                />
-
-                <Button
-                    title="Edit Details"
-                    onPress={() => {
-
                     }}
                 />
                 {/* <AntDesign

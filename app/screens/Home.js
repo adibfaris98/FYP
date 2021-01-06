@@ -4,6 +4,7 @@ import Swiper from 'react-native-swiper'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import StarRating from '../components/StarRating';
 
@@ -59,33 +60,33 @@ export default function Home({ navigation }) {
                     <TouchableOpacity
                         style={styles.categoryBtn}
                         onPress={() =>
-                            navigation.navigate('CardListScreen', { title: 'Category' })
+                            navigation.navigate('TournamentList', { title: 'Tournament' })
                         }>
                         <View style={styles.categoryIcon}>
                             <MaterialCommunityIcons
-                                name="gender-male-female-variant"
+                                name="tournament"
                                 size={35}
                                 color="#6B46C1" />
 
                         </View>
-                        <Text style={styles.categoryBtnTxt}>Category</Text>
+                        <Text style={styles.categoryBtnTxt}>Tournament</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.categoryBtn}
                         onPress={() =>
-                            navigation.navigate('CardListScreen', { title: 'Sports' })
+                            navigation.navigate('EventList', { title: 'Event' })
                         }>
                         <View style={styles.categoryIcon}>
-                            <MaterialIcons
-                                name="sports"
-                                size={35}
+                            <Entypo
+                                name="sports-club"
+                                size={32}
                                 color="#6B46C1" />
                         </View>
-                        <Text style={styles.categoryBtnTxt}>Sports</Text>
+                        <Text style={styles.categoryBtnTxt}>Event</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={styles.categoryBtn}
                         onPress={() =>
                             navigation.navigate('CardListScreen', { title: 'Location' })
@@ -97,7 +98,7 @@ export default function Home({ navigation }) {
                                 color="#6B46C1" />
                         </View>
                         <Text style={styles.categoryBtnTxt}>Location</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 {/* Tournament Card*/}
                 <View style={styles.cardsWrapper}>

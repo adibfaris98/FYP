@@ -11,28 +11,6 @@ export default function Profile() {
     const userAuth = auth().currentUser;
 
     const { name, email, about, country, phoneNumber, photoURL } = useContext(AuthContext)
-    // ,setName,setEmail,setAbout,setCountry,setPhoneNumber,userDetails
-    // const [name, setName] = useState()
-    // const [email, setEmail] = useState()
-    // const [about, setAbout] = useState()
-    // const [country, setCountry] = useState()
-    // const [phoneNumber, setPhoneNumber] = useState()
-
-    // useEffect(() => {
-    //     async function main() {
-    //         try {
-    //             const { data } = await axios.get(`/user/read/${userAuth.uid}`)
-    //             setAbout(data.about)
-    //             setName(data.name)
-    //             setCountry(data.country)
-    //             setPhoneNumber(data.phoneNumber)
-    //             setEmail(data.email)
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    //     main()
-    // }, [name])
 
     return (
         <SafeAreaView style={styles.container}>
