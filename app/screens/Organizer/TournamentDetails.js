@@ -4,7 +4,8 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import * as Animatable from 'react-native-animatable'
-import { DataTable, Card, Title, Paragraph } from 'react-native-paper';
+import { DataTable, Card, Title, Paragraph, Caption } from 'react-native-paper';
+import FixtureCard from '../../components/FixtureCard';
 
 const MIN_HEIGHT = Platform.OS == 'ios' ? 90 : 55
 const MAX_HEIGHT = 300
@@ -14,6 +15,7 @@ export default function CardItemDetails({ route, navigation }) {
     const currentUser = auth().currentUser.uid;
     const navTitleView = useRef(null)
     const [officialTeam, setOfficialTeam] = useState(null)
+    const [format, getFormat] = useState(null)
 
     const [finalStageList_semi, setFinalStageList_semi] = useState(null)
     const [finalStageList_quarter, setFinalStageList_quarter] = useState(null)
@@ -191,24 +193,48 @@ export default function CardItemDetails({ route, navigation }) {
                     </View>
                 </TriggeringView>
                 <View style={[styles.section, styles.sectionLarge]}>
-                    <Text style={styles.sectionContent}>{itemData.description}</Text>
-                    <Text style={styles.sectionContent}>Sport Type : {itemData.sportType}</Text>
-                    <Text style={styles.sectionContent}>Venue : {itemData.location}</Text>
-                    <Text style={styles.sectionContent}>Number Of Team : {itemData.participants}</Text>
-                    <Text style={styles.sectionContent}>Date : {itemData.startDate} to {itemData.endDate}</Text>
-                    <Text style={styles.sectionContent}>Gender : {itemData.gender}</Text>
+                    <Caption style={styles.sectionContent}>{itemData.description}</Caption>
+
+                    <Title>{itemData.sportType}</Title>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ justifyContent: 'space-between', width: '28%', flexDirection: 'column', fontSize: 16 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Caption style={{ fontSize: 16 }}>Venue</Caption>
+                                <Caption style={{ fontSize: 16 }}>:</Caption>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Caption style={{ fontSize: 16 }}>No. Of Team</Caption>
+                                <Caption style={{ fontSize: 16 }}>:</Caption>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Caption style={{ fontSize: 16 }}>Date</Caption>
+                                <Caption style={{ fontSize: 16 }}>:</Caption>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Caption style={{ fontSize: 16 }}>Gender</Caption>
+                                <Caption style={{ fontSize: 16 }}>:</Caption>
+                            </View>
+                        </View>
+
+                        <View style={{ marginLeft: 10, width: '100%' }}>
+                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.location}</Caption>
+                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.participants}</Caption>
+                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.startDate} - {itemData.endDate}</Caption>
+                            <Caption style={{ fontSize: 16, fontWeight: 'bold', borderWidth: 1, width: '20%', textAlign: 'center', borderColor: 'green', borderRadius: 5, color: 'green' }}>{itemData.gender}</Caption>
+                        </View>
+                    </View>
+                </View>
+
+                <View style={styles.section}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={styles.title}>Official Team List</Text>
+                    </View>
                 </View>
 
                 {officialTeam && officialTeam != null ?
                     (
                         <View>
-                            <View style={styles.section}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={styles.title}>Official Team List</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.section]}>
+                            <View style={[styles.section, { padding: 5 }]}>
                                 <DataTable>
                                     <DataTable.Header>
                                         <DataTable.Title style={{ flex: 1 }}>No.</DataTable.Title>
@@ -227,7 +253,10 @@ export default function CardItemDetails({ route, navigation }) {
                                 </DataTable>
                             </View>
                         </View>
-                    ) : null
+                    ) :
+                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
+                        <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently not Available</Caption>
+                    </View>
                 }
 
                 <View style={styles.section}>
@@ -278,16 +307,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureA.map((value, i) => {
                                     return (
-                                        <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                            <Card.Content >
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeTeam} vs {value.awayTeam}
-                                                </Paragraph>
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeScore} {value.awayScore}
-                                                </Paragraph>
-                                            </Card.Content>
-                                        </Card>
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -339,16 +359,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureB.map((value, i) => {
                                     return (
-                                        <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                            <Card.Content >
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeTeam} vs {value.awayTeam}
-                                                </Paragraph>
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeScore} {value.awayScore}
-                                                </Paragraph>
-                                            </Card.Content>
-                                        </Card>
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -400,16 +411,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureC.map((value, i) => {
                                     return (
-                                        <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                            <Card.Content>
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeTeam} vs {value.awayTeam}
-                                                </Paragraph>
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeScore} {value.awayScore}
-                                                </Paragraph>
-                                            </Card.Content>
-                                        </Card>
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -586,7 +588,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 fontSize: 18,
                                 fontWeight: 'bold',
                                 color: '#333'
-                            }}>Tournament Fixtures</Text>
+                            }}>Final Fixtures</Text>
                             <View style={[styles.section]}>
                                 <Text style={{
                                     // alignSelf: 'center',
@@ -597,16 +599,7 @@ export default function CardItemDetails({ route, navigation }) {
 
                                 {fixture_semi.map((value, i) => {
                                     return (
-                                        <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                            <Card.Content>
-                                                <Paragraph style={{ textAlign: "center" }} >
-                                                    {value.homeTeam} vs {value.awayTeam}
-                                                </Paragraph>
-                                                <Paragraph style={{ textAlign: "center" }}>
-                                                    {value.homeScore} {value.awayScore}
-                                                </Paragraph>
-                                            </Card.Content>
-                                        </Card>
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -625,16 +618,7 @@ export default function CardItemDetails({ route, navigation }) {
 
                             {fixture_3rd.map((value, i) => {
                                 return (
-                                    <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                        <Card.Content>
-                                            <Paragraph style={{ textAlign: "center" }} >
-                                                {value.homeTeam} vs {value.awayTeam}
-                                            </Paragraph>
-                                            <Paragraph style={{ textAlign: "center" }}>
-                                                {value.homeScore} {value.awayScore}
-                                            </Paragraph>
-                                        </Card.Content>
-                                    </Card>
+                                    <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                 )
                             })}
                         </View>
@@ -652,16 +636,7 @@ export default function CardItemDetails({ route, navigation }) {
 
                             {fixture_final.map((value, i) => {
                                 return (
-                                    <Card key={i} style={{ alignItems: 'center', borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10 }}>
-                                        <Card.Content>
-                                            <Paragraph style={{ textAlign: "center" }} >
-                                                {value.homeTeam} vs {value.awayTeam}
-                                            </Paragraph>
-                                            <Paragraph style={{ textAlign: "center" }}>
-                                                {value.homeScore} {value.awayScore}
-                                            </Paragraph>
-                                        </Card.Content>
-                                    </Card>
+                                    <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
                                 )
                             })}
                         </View>

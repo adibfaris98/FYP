@@ -3,20 +3,22 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, Button, StyleSheet, FlatList } from 'react-native'
 import { data } from '../../model/data'
 import axios from 'axios'
+import auth from '@react-native-firebase/auth'
 
 import Card from '../../components/Card'
 
 export default function EventList({ navigation }) {
-
+    const currentUser = auth().currentUser.uid
     const [events, setEvents] = useState(null)
 
     useEffect(() => {
-        getEvents()
+        getHostedEvents()
+        console.log(currentUser)
     }, [])
 
-    async function getEvents() {
+    async function getHostedEvents() {
         try {
-            const response = await axios.get('/events');
+            const response = await axios.get(`/${currentUser}/events`);
             setEvents(response.data)
         } catch (error) {
             console.error(error);

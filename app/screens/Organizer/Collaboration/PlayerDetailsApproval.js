@@ -6,26 +6,24 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
-import { AuthContext } from '../navigation/AuthProvider'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export default function PlayerDetailsScreen({ route, navigation }) {
-    const currentUser = auth().currentUser.uid;
-    const player = route.params.playerDetails
+export default function PlayerDetailsApproval({ route, navigation }) {
+    const { playerData, tournamentID, eventID } = route.params
+    const [format, setFormat] = useState()
 
+    useEffect(() => {
+        getFormat()
+        console.log(eventID)
+        console.log(tournamentID)
+    }, [])
 
-    const { tournamentID, format, remove , setRemove} = route.params
-
-    const deletePlayer = async () => {
+    const getFormat = async () => {
         try {
-            const response = await axios.delete(`/${tournamentID}/${currentUser}/player/${player.identificationID}`);
-            submitDelete()
+            const res = await axios.get(`/${eventID}/${tournamentID}/format`)
+            setFormat(res.data)
         } catch (error) {
-            console.error(error);
+
         }
-    }
-    const submitDelete = () =>{
-        setRemove(remove => !remove)
     }
 
     return (
@@ -35,21 +33,20 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                     <View style={{ flexDirection: 'row', marginTop: 15 }}>
                         <Avatar.Image
                             source={{
-                                uri: player.passportPhoto
+                                uri: playerData.passportPhoto
                             }}
                             size={80}
                         />
 
                     </View>
                 </View> : null}
-
             {format && format.name == true ?
                 <View>
                     <Title style={[styles.title, {
                         marginTop: 15,
                         marginBottom: 5,
                         textAlign: 'center'
-                    }]}>{player.name}</Title>
+                    }]}>{playerData.name}</Title>
                 </View> : null
             }
 
@@ -57,82 +54,56 @@ export default function PlayerDetailsScreen({ route, navigation }) {
                 {format && format.address == true ?
                     <View style={styles.row}>
                         <Icon name="map-marker-radius" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>Address: {player.address}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Address: {playerData.address}</Text>
                     </View> : null
                 }
                 {format && format.identificationID == true ?
                     <View style={styles.row}>
                         <Icon name="card-account-details-outline" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>IC Number: {player.identificationID}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>IC Number: {playerData.identificationID}</Text>
                     </View> : null
                 }
                 {format && format.numMatric == true ?
                     <View style={styles.row}>
                         <Icon name="card-account-details-outline" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>Matric Number: {player.numMatric}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Matric Number: {playerData.numMatric}</Text>
                     </View> : null
                 }
                 {format && format.numAthelete == true ?
                     <View style={styles.row}>
                         <Octicons name="jersey" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>Athlete Number: {player.numAthelete}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Athlete Number: {playerData.numAthelete}</Text>
                     </View> : null
                 }
                 {format && format.phoneNumber == true ?
                     <View style={styles.row}>
                         <Icon name="phone" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>Phone Number: {player.phoneNumber}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Phone Number: {playerData.phoneNumber}</Text>
                     </View> : null
                 }
                 {format && format.gender == true ?
                     <View style={styles.row}>
                         <Icon name="email" color="#777777" size={20} />
-                        <Text style={{ color: "#777777", marginLeft: 20 }}>Gender: {player.gender}</Text>
+                        <Text style={{ color: "#777777", marginLeft: 20 }}>Gender: {playerData.gender}</Text>
                     </View> : null
                 }
 
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <Button
-                    color="red"
-                    title="Delete Player"
-                    onPress={() => {
-                        Alert.alert(
-                            "Delete player",
-                            "Are you sure want to delete this player ?",
-                            [
-                                {
-                                    text: "Cancel",
-                                    onPress: () => console.log('cancel'),
-                                    style: "cancel"
-                                },
-                                {
-                                    text: "OK",
-                                    onPress: () => {
-                                        deletePlayer()
-                                        navigation.navigate('TeamRegisterScreen')
-                                        // getTeam()
-                                    }
-                                }
-                            ],
-                            { cancelable: false }
-                        );
-                    }}
-                />
                 {/* <AntDesign
-                    color='#333'
-                    name='deleteuser'
-                    size={25}
-                    backgroundColor="#fff"
-                    
-                /> */}
+                color='#333'
+                name='deleteuser'
+                size={25}
+                backgroundColor="#fff"
+                
+            /> */}
+  
 
             </View>
         </SafeAreaView>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

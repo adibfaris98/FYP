@@ -4,15 +4,16 @@ import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, TouchableOpac
 import { Button, Paragraph, Dialog, Portal, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function ModalForm({ fixture, navigation, tournamentID, setSubmit, submit, isMatchStart, setIsFullTime }) {
+export default function ModalFormEditFixture({ fixture, navigation, tournamentID, setSubmit, submit, isMatchStart, setIsFullTime , eventID}) {
     const [visible, setVisible] = useState(false);
     const [awayScore, setAwayScore] = useState(fixture.awayScore);
     const [homeScore, setHomeScore] = useState(fixture.homeScore);
 
     const showDialog = () => setVisible(true);
     const hideDialog = () => setVisible(false);
+
     useEffect(()=>{
-        console.log("modal form tournament")
+        console.log("edit fixture" , eventID)
     })
 
     const submitUpdate = async () => {
@@ -20,32 +21,32 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
             const newFixture = { ...fixture, awayScore, homeScore, isFulltime: false, isMatchStart }
             switch (fixture.fixtureID) {
                 case 'fixture_A':
-                    await axios.put(`/${tournamentID}/updateMatchScoreA`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreA`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_B':
-                    await axios.put(`/${tournamentID}/updateMatchScoreB`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreB`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_C':
-                    await axios.put(`/${tournamentID}/updateMatchScoreC`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreC`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_D':
-                    await axios.put(`/${tournamentID}/updateMatchScoreD`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreD`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'final':
-                    await axios.put(`/${tournamentID}/updateMatchScoreFinal`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreFinal`, newFixture)
                     setSubmit(!submit)
                     break
                 case '3rdPlace':
-                    await axios.put(`/${tournamentID}/updateMatchScoreThird`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreThird`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'semiFinal1':
                 case 'semiFinal2':
-                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
                     setSubmit(!submit)
                     break
             }
@@ -60,32 +61,32 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
             const newFixture = { ...fixture, awayScore, homeScore, isFulltime: true, isMatchStart}
             switch (fixture.fixtureID) {
                 case 'fixture_A':
-                    await axios.put(`/${tournamentID}/finishedMatchA`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/finishedMatchA`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_B':
-                    await axios.put(`/${tournamentID}/finishedMatchB`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/finishedMatchB`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_C':
-                    await axios.put(`/${tournamentID}/finishedMatchC`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/finishedMatchC`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'fixture_D':
-                    await axios.put(`/${tournamentID}/finishedMatchD`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/finishedMatchD`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'final':
-                    await axios.put(`/${tournamentID}/updateMatchScoreFinal`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreFinal`, newFixture)
                     setSubmit(!submit)
                     break
                 case '3rdPlace':
-                    await axios.put(`/${tournamentID}/updateMatchScoreThird`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreThird`, newFixture)
                     setSubmit(!submit)
                     break
                 case 'semiFinal1':
                 case 'semiFinal2':
-                    await axios.put(`/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
+                    await axios.put(`/${eventID}/${tournamentID}/updateMatchScoreSemiFinal`, newFixture)
                     setSubmit(!submit)
                     break
             }

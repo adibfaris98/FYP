@@ -1,30 +1,24 @@
-import React, { useRef, useState, useEffect, useContext } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { TextInput, View, Text, StyleSheet, Button, Image, Dimensions, Platform, StatusBar, Alert, TouchableOpacity, TouchableHighlight, Modal } from 'react-native'
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
-import { DataTable, Card, Title, Paragraph, Caption, Button as RNPButton } from 'react-native-paper';
-import { AuthContext } from '../navigation/AuthProvider'
+import { DataTable, Card, Title, Paragraph } from 'react-native-paper';
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import * as Animatable from 'react-native-animatable'
-import FixtureCard from '../components/FixtureCard';
+import FixtureCard from '../../components/FixtureCard';
 
 const MIN_HEIGHT = Platform.OS == 'ios' ? 90 : 55
 const MAX_HEIGHT = 300
 
-export default function TournamentDetails({ route, navigation }) {
-    const itemData = route.params.itemData
-    const { name } = useContext(AuthContext)
-    const { render, setRender } = route.params
-    const managerRef = itemData.managerRef.find(obj => obj.managerID == currentUser)
+export default function TournamentDetailsEvent({ route, navigation }) {
+    const { tournament, event } = route.params
     const currentUser = auth().currentUser.uid;
     const navTitleView = useRef(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [teamName, setTeamName] = useState(null)
     const [isRegister, setIsRegister] = useState(null)
-    const [format, setFormat] = useState(null)
-    const [registerReq, setRegisterRequest] = useState(itemData.requestListMgr.find(obj => obj.managerID == currentUser))
+
     const [officialTeam, setOfficialTeam] = useState(null)
-    const [submit, setSubmit] = useState(false)
 
     const [finalStageList_semi, setFinalStageList_semi] = useState(null)
     const [finalStageList_quarter, setFinalStageList_quarter] = useState(null)
@@ -62,76 +56,29 @@ export default function TournamentDetails({ route, navigation }) {
     const [tableH, setTableH] = useState(null)
 
     useEffect(() => {
-        getTeam()
-        // getOfficialTeamList()
+        // getTeam()
+        getOfficialTeamList()
         getSeeding()
         getFixtureGroup()
         getTable()
         getParticipants()
         getFixtureFinal()
-        getFormat()
-        // console.log(itemData.requestListMgr)
-        // console.log(isRegister)
-    }, [submit])
-
-
-
-    const sendRegisterRequest = () => {
-        axios.post(`/${itemData.tournamentID}/${itemData.hostName}/request`, {
-            request: {
-                managerID: currentUser,
-                status: "pending",
-                tournamentID: itemData.tournamentID
-            },
-            requestHost: {
-                managerID: currentUser,
-                managerName: name,
-                tournamentID: itemData.tournamentID,
-                tournamentName: itemData.title,
-                type: "tournamentRequest"
-            }
-        }).then(() => {
-            setSubmit(true)
-            setRegisterRequest(true)
-        })
-    }
-
-    const getFormat = async () => {
-        const res = await axios.get(`/${itemData.tournamentID}/format`)
-        setFormat(res.data)
-        // console.log(res.data)
-    }
+    }, [])
 
     const getTeam = async () => {
         try {
-            const res = await axios.get(`/${itemData.tournamentID}/${currentUser}/team`)
-            if (res.data == false) {
-                setIsRegister(false)
-            } else {
-                setIsRegister(true)
-            }
-
+            const res = await axios.get(`/${event.eventID}/${tournament.tournamentID}/${currentUser}/team`)
+            setIsRegister(res.data.teamName)
         } catch (error) {
 
-        }
-    }
-
-    const submitTeam = async () => {
-        try {
-            const res = await axios.post(`/${currentUser}/${itemData.tournamentID}/team`,
-                {
-                    teamName: teamName
-                })
-        } catch (error) {
-            console.log(error)
         }
     }
 
     const getOfficialTeamList = async () => {
         try {
-            const res = await axios.get(`/organizer/${itemData.tournamentID}/officialTeam`)
+            const res = await axios.get(`/${event.eventID}/${tournament.tournamentID}/officialTeam`)
             setOfficialTeam(res.data)
-            // console.log(res.data.length)
+            console.log(res.data.length)
         } catch (error) {
 
         }
@@ -139,7 +86,7 @@ export default function TournamentDetails({ route, navigation }) {
 
     const getFixtureGroup = async () => {
         try {
-            const response = await axios.get(`/${itemData.tournamentID}/grouping/fixture`)
+            const response = await axios.get(`/${event.eventID}/${tournament.tournamentID}/grouping/fixtures`)
             const data = response.data
             setFixtureA(data.fixture_A)
             setFixtureB(data.fixture_B)
@@ -156,7 +103,7 @@ export default function TournamentDetails({ route, navigation }) {
 
     const getSeeding = async () => {
         try {
-            const response = await axios.get(`/${itemData.tournamentID}/seedings`)
+            const response = await axios.get(`/${event.eventID}/${tournament.tournamentID}/seedings`)
             const data = response.data
             setSeedingA(data.group_A)
             setSeedingB(data.group_B)
@@ -171,9 +118,10 @@ export default function TournamentDetails({ route, navigation }) {
 
         }
     }
+
     const getParticipants = async () => {
         try {
-            const res = await axios.get(`/${itemData.tournamentID}/final/participant`)
+            const res = await axios.get(`/${event.eventID}/${tournament.tournamentID}/final/participants`)
             setFinalStageList_semi(res.data)
         } catch (error) {
 
@@ -182,7 +130,7 @@ export default function TournamentDetails({ route, navigation }) {
 
     const getFixtureFinal = async () => {
         try {
-            const res = await axios.get(`/${itemData.tournamentID}/final/fixture`)
+            const res = await axios.get(`/${event.eventID}/${tournament.tournamentID}/final/fixtures`)
             setFixture_semi(res.data.semiFinal)
             setFixture_3rd(res.data.thirdPlace)
             setFixture_final(res.data.final)
@@ -192,7 +140,7 @@ export default function TournamentDetails({ route, navigation }) {
     }
     const getTable = async () => {
         try {
-            const res = await axios.get(`/${itemData.tournamentID}/grouping/tables`)
+            const res = await axios.get(`/${event.eventID}/${tournament.tournamentID}/grouping/tables`)
             const data = res.data
             setTableA(data.table_A)
             setTableB(data.table_B)
@@ -207,78 +155,20 @@ export default function TournamentDetails({ route, navigation }) {
         }
     }
 
-    // const ButtonType = () => (
-
-    // )
-
-
-    // const buttonType = () => {
-    //     if (itemData.registrationStatus == true) {
-    //         let obj = itemData.requestListMgr.find(obj => obj.managerID === currentUser)
-    //         console.log(obj)
-    //         console.log("asdasdasasd", isRegister)
-    //         if (obj.length > 0) {
-    //             if (isRegister && isRegister == undefined) {
-    //                 if (Number(officialTeam.length) < Number(itemData.participants)) {
-    //                     return (
-    //                         <Button
-    //                             title='Register here'
-    //                             color='#6B46C1'
-    //                             onPress={() => {
-    //                                 // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                                 setModalVisible(true)
-    //                             }}
-    //                             style={{ marginHorizontal: 2 }}
-    //                         />
-    //                     )
-    //                 }
-    //             } else {
-    //                 return (
-    //                     <Button
-    //                         title='Edit Registration'
-    //                         color='orange'
-    //                         onPress={() => {
-    //                             navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                             // setModalVisible(true)
-    //                         }}
-    //                         style={{ marginHorizontal: 2 }}
-    //                     />
-    //                 )
-    //             }
-    //         }
-    //     }
-    // }
-
-    // const buttonType = () => {
-    //     if (!obj) {
-    //         return (
-    //             <Button
-    //                 title='Request to register'
-    //                 color='#6B46C1'
-    //                 onPress={() => {
-    //                     // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                     setModalVisible(true)
-    //                 }}
-    //                 style={{ marginHorizontal: 2 }}
-    //             />
-    //         )
-    //     } else {
-    //         if (itemData.registerStatus == true && obj.status == "accepted") {
-    //             return (
-    //                 <Button
-    //                     title='Register here'
-    //                     color='#6B46C1'
-    //                     onPress={() => {
-    //                         // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                         setModalVisible(true)
-    //                     }}
-    //                     style={{ marginHorizontal: 2 }}
-    //                 />
-    //             )
-    //         }
-    //     }
-    // }
-
+    const buttonType = () => {
+        if (tournament.collaborator == currentUser) {
+            return (
+                <Button
+                    title='Manage Tournament'
+                    color='#6B46C1'
+                    onPress={() => {
+                        navigation.navigate('CollaborationTab', { tournament , event })
+                    }}
+                    style={{ marginHorizontal: 2 }}
+                />
+            )
+        }
+    }
     return (
         <View style={styles.container}>
             <StatusBar barStyle='light-content' />
@@ -291,18 +181,18 @@ export default function TournamentDetails({ route, navigation }) {
                 renderHeader={() => (
                     <Image
                         source={{
-                            uri: itemData.photoURL
+                            uri: event.photoURL
                         }}
                         style={styles.image} />
                 )}
                 renderForeground={() => (
                     <View style={styles.titleContainer}>
-                        <Text style={styles.imageTitle}>{itemData.title}</Text>
+                        <Text style={styles.imageTitle}>{event.title}</Text>
                     </View>
                 )}
                 renderFixedForeground={() => (
                     <Animatable.View style={styles.navTitleView} ref={navTitleView}>
-                        <Text style={styles.navTitle}>{itemData.title}</Text>
+                        <Text style={styles.navTitle}>{event.title}</Text>
                     </Animatable.View>
                 )}
             >
@@ -316,114 +206,30 @@ export default function TournamentDetails({ route, navigation }) {
                         <Text style={styles.title}>Overview</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                             {/* <FontAwesome name='star' size={16} color='#6B46C1' />
-                            <Text style={{ marginHorizontal: 2 }}>{itemData.rating}</Text>
-                            <Text>({itemData.reviews})</Text> */}
-
-                            {/* {!obj ?
-                                <Button
-                                    title='Request to register'
-                                    color='#6B46C1'
-                                    onPress={() => {
-                                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                        sendRegisterRequest()
-                                    }}
-                                    style={{ marginHorizontal: 2 }}
-                                /> : itemData && itemData.registrationStatus == true && isRegister == false ?
-                                    <Button
-                                        title='Register here'
-                                        color='#6B46C1'
-                                        onPress={() => {
-                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    /> : null
-                            } */}
-
-                            {!registerReq && <Button
-                                title='Request to register'
-                                color='#6B46C1'
-                                onPress={() => {
-                                    // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                    sendRegisterRequest()
-                                }}
-                                style={{ marginHorizontal: 2 }}
-                            />}
-
-                            {itemData.registrationStatus && managerRef ?
-                                !isRegister ?
-
-                                    <Button
-                                        title='Register here'
-                                        color='#6B46C1'
-                                        onPress={() => {
-                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    />
-                                    :
-                                    <Button
-                                        title='Edit Registration'
-                                        color='orange'
-                                        onPress={() => {
-                                            navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            // setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    />
-
-                                : null
-                            }
-
-
-
-
+                            <Text style={{ marginHorizontal: 2 }}>{tournament.rating}</Text>
+                            <Text>({tournament.reviews})</Text> */}
+                            {buttonType()}
                         </View>
                     </View>
                 </TriggeringView>
-                <View style={[styles.section, styles.sectionLarge]}>
-                    <Caption style={styles.sectionContent}>{itemData.description}</Caption>
-
-                    <Title>{itemData.sportType}</Title>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ justifyContent: 'space-between', width: '28%', flexDirection: 'column', fontSize: 16 }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Caption style={{ fontSize: 16 }}>Venue</Caption>
-                                <Caption style={{ fontSize: 16 }}>:</Caption>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Caption style={{ fontSize: 16 }}>No. Of Team</Caption>
-                                <Caption style={{ fontSize: 16 }}>:</Caption>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Caption style={{ fontSize: 16 }}>Date</Caption>
-                                <Caption style={{ fontSize: 16 }}>:</Caption>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Caption style={{ fontSize: 16 }}>Gender</Caption>
-                                <Caption style={{ fontSize: 16 }}>:</Caption>
-                            </View>
-                        </View>
-
-                        <View style={{ marginLeft: 10, width: '100%' }}>
-                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.location}</Caption>
-                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.participants}</Caption>
-                            <Caption style={{ fontSize: 16, fontWeight: 'bold' }}>{itemData.startDate} - {itemData.endDate}</Caption>
-                            <Caption style={{ fontSize: 16, fontWeight: 'bold', borderWidth: 1, width: '20%', textAlign: 'center', borderColor: 'green', borderRadius: 5, color: 'green' }}>{itemData.gender}</Caption>
-                        </View>
-                    </View>
+                <View style={[styles.section]}>
+                    <Text style={styles.sectionContent}>Sport Type : {tournament.sportType}</Text>
+                    <Text style={styles.sectionContent}>Venue : {event.location}</Text>
+                    <Text style={styles.sectionContent}>Number Of Team : {tournament.participants}</Text>
+                    <Text style={styles.sectionContent}>Date : {event.startDate} to {event.endDate}</Text>
+                    <Text style={styles.sectionContent}>Gender : {tournament.gender}</Text>
                 </View>
 
-                <View style={styles.section}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.title}>Official Team List</Text>
-                    </View>
-                </View>
                 {officialTeam && officialTeam != null ?
                     (
                         <View>
-                            <View style={[styles.section, styles.sectionLarge]}>
+                            <View style={styles.section}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.title}>Official Team List</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.section]}>
                                 <DataTable>
                                     <DataTable.Header>
                                         <DataTable.Title style={{ flex: 1 }}>No.</DataTable.Title>
@@ -442,10 +248,7 @@ export default function TournamentDetails({ route, navigation }) {
                                 </DataTable>
                             </View>
                         </View>
-                    ) :
-                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
-                        <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently not Available</Caption>
-                    </View>
+                    ) : null
                 }
 
                 <View style={styles.section}>
@@ -456,7 +259,7 @@ export default function TournamentDetails({ route, navigation }) {
                 {/* Group A */}
                 {/* Seedings A */}
                 {seedingA && seedingA != null ?
-                    <View style={[styles.section, styles.sectionLarge]}>
+                    <View style={[styles.section]}>
                         <Text style={{
                             // alignSelf: 'center',
                             fontSize: 18,
@@ -495,17 +298,14 @@ export default function TournamentDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureA.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                     )
                                 })}
                             </View>
                             : null
                         }
                     </View>
-                    :
-                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
-                        <Caption style={styles.sectionContent}>For grouping, the game will follow {itemData.gStage} format with.</Caption>
-                    </View>
+                    : <Text style={styles.sectionContent}>For grouping, the game will follow {tournament.gStage} format with.</Text>
                 }
 
                 {/* Group B */}
@@ -550,7 +350,7 @@ export default function TournamentDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureB.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -602,7 +402,7 @@ export default function TournamentDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureC.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -612,64 +412,23 @@ export default function TournamentDetails({ route, navigation }) {
                     : null
                 }
 
-
-                {tableA != null ?
-                    <View style={[styles.section]}>
-                        {/* Table A */}
-                        {tableA != null ?
-                            <View>
+                <View style={[styles.section]}>
+                    {/* Table A */}
+                    {tableA != null ?
+                        <View>
+                            <Text style={{
+                                // alignSelf: 'center',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#333'
+                            }}>Standings</Text>
+                            <View style={[styles.section], { margin: 0, padding: 0 }}>
                                 <Text style={{
                                     // alignSelf: 'center',
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                     color: '#333'
-                                }}>Standings</Text>
-                                <View style={[styles.section], { margin: 0, padding: 0 }}>
-                                    <Text style={{
-                                        // alignSelf: 'center',
-                                        fontSize: 18,
-                                        fontWeight: 'bold',
-                                        color: '#333'
-                                    }}>Group A</Text>
-                                    <DataTable>
-                                        <DataTable.Header>
-                                            <DataTable.Title>No.</DataTable.Title>
-                                            <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
-                                            <DataTable.Title numeric>MP</DataTable.Title>
-                                            <DataTable.Title numeric>W</DataTable.Title>
-                                            <DataTable.Title numeric>D</DataTable.Title>
-                                            <DataTable.Title numeric>L</DataTable.Title>
-                                            <DataTable.Title numeric>Pts</DataTable.Title>
-                                        </DataTable.Header>
-
-                                        {tableA.map((value, i) => {
-                                            return (
-                                                <DataTable.Row key={i}>
-                                                    <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                                    <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
-                                                    <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
-                                                    <DataTable.Cell numeric>{value.win}</DataTable.Cell>
-                                                    <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
-                                                    <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
-                                                    <DataTable.Cell numeric>{value.points}</DataTable.Cell>
-                                                </DataTable.Row>
-                                            )
-                                        })}
-                                    </DataTable>
-                                </View>
-                            </View>
-                            : null
-                        }
-
-                        {/* Table B */}
-                        {tableB != null ?
-                            <View style={{ marginBottom: 10 }}>
-                                <Text style={{
-                                    // alignSelf: 'center',
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#333'
-                                }}>Group B</Text>
+                                }}>Group A</Text>
                                 <DataTable>
                                     <DataTable.Header>
                                         <DataTable.Title>No.</DataTable.Title>
@@ -681,7 +440,7 @@ export default function TournamentDetails({ route, navigation }) {
                                         <DataTable.Title numeric>Pts</DataTable.Title>
                                     </DataTable.Header>
 
-                                    {tableB.map((value, i) => {
+                                    {tableA.map((value, i) => {
                                         return (
                                             <DataTable.Row key={i}>
                                                 <DataTable.Cell>{i + 1}</DataTable.Cell>
@@ -696,48 +455,86 @@ export default function TournamentDetails({ route, navigation }) {
                                     })}
                                 </DataTable>
                             </View>
-                            : null
-                        }
+                        </View>
+                        : null
+                    }
 
-                        {/* Table C */}
-                        {tableC != null ?
-                            <View style={{ marginBottom: 10 }}>
-                                <Text style={{
-                                    // alignSelf: 'center',
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#333'
-                                }}>Group C</Text>
-                                <DataTable>
-                                    <DataTable.Header>
-                                        <DataTable.Title>No.</DataTable.Title>
-                                        <DataTable.Title>Team</DataTable.Title>
-                                        <DataTable.Title numeric>MP</DataTable.Title>
-                                        <DataTable.Title numeric>W</DataTable.Title>
-                                        <DataTable.Title numeric>D</DataTable.Title>
-                                        <DataTable.Title numeric>L</DataTable.Title>
-                                        <DataTable.Title numeric>Pts</DataTable.Title>
-                                    </DataTable.Header>
+                    {/* Table B */}
+                    {tableB != null ?
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={{
+                                // alignSelf: 'center',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#333'
+                            }}>Group B</Text>
+                            <DataTable>
+                                <DataTable.Header>
+                                    <DataTable.Title>No.</DataTable.Title>
+                                    <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
+                                    <DataTable.Title numeric>MP</DataTable.Title>
+                                    <DataTable.Title numeric>W</DataTable.Title>
+                                    <DataTable.Title numeric>D</DataTable.Title>
+                                    <DataTable.Title numeric>L</DataTable.Title>
+                                    <DataTable.Title numeric>Pts</DataTable.Title>
+                                </DataTable.Header>
 
-                                    {tableC.map((value, i) => {
-                                        return (
-                                            <DataTable.Row key={i}>
-                                                <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                                <DataTable.Cell>{value.teamName}</DataTable.Cell>
-                                                <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
-                                                <DataTable.Cell numeric>{value.win}</DataTable.Cell>
-                                                <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
-                                                <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
-                                                <DataTable.Cell numeric>{value.points}</DataTable.Cell>
-                                            </DataTable.Row>
-                                        )
-                                    })}
-                                </DataTable>
-                            </View> : null
-                        }
-                    </View> : null
-                }
+                                {tableB.map((value, i) => {
+                                    return (
+                                        <DataTable.Row key={i}>
+                                            <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                            <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                        </DataTable.Row>
+                                    )
+                                })}
+                            </DataTable>
+                        </View>
+                        : null
+                    }
 
+                    {/* Table C */}
+                    {tableC != null ?
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={{
+                                // alignSelf: 'center',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#333'
+                            }}>Group C</Text>
+                            <DataTable>
+                                <DataTable.Header>
+                                    <DataTable.Title>No.</DataTable.Title>
+                                    <DataTable.Title>Team</DataTable.Title>
+                                    <DataTable.Title numeric>MP</DataTable.Title>
+                                    <DataTable.Title numeric>W</DataTable.Title>
+                                    <DataTable.Title numeric>D</DataTable.Title>
+                                    <DataTable.Title numeric>L</DataTable.Title>
+                                    <DataTable.Title numeric>Pts</DataTable.Title>
+                                </DataTable.Header>
+
+                                {tableC.map((value, i) => {
+                                    return (
+                                        <DataTable.Row key={i}>
+                                            <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                            <DataTable.Cell>{value.teamName}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                            <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                        </DataTable.Row>
+                                    )
+                                })}
+                            </DataTable>
+                        </View>
+                        : null
+                    }
+                </View>
 
                 <View style={styles.section}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -769,9 +566,10 @@ export default function TournamentDetails({ route, navigation }) {
                                 <DataTable.Cell>{finalStageList_semi.group_A2.teamName}</DataTable.Cell>
                             </DataTable.Row>
                         </DataTable>
-                        : <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
-                            <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently not Available</Caption>
-                        </View>
+                        : <Text>Currently final-stage participants list is empty.
+                        Kindly go to the to finalize qualified
+                        team in standings. Make sure all the results in the
+                group-stage is updated.</Text>
                     }
 
                     {fixture_semi && fixture_semi != null ?
@@ -792,7 +590,7 @@ export default function TournamentDetails({ route, navigation }) {
 
                                 {fixture_semi.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                     )
                                 })}
                             </View>
@@ -811,7 +609,7 @@ export default function TournamentDetails({ route, navigation }) {
 
                             {fixture_3rd.map((value, i) => {
                                 return (
-                                    <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                    <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                 )
                             })}
                         </View>
@@ -829,7 +627,7 @@ export default function TournamentDetails({ route, navigation }) {
 
                             {fixture_final.map((value, i) => {
                                 return (
-                                    <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                    <FixtureCard key={i} fixture={value} tournamentID={tournament.tournamentID} />
                                 )
                             })}
                         </View>
@@ -841,7 +639,7 @@ export default function TournamentDetails({ route, navigation }) {
                 {/* categories  */}
                 {/* <View style={styles.section}>
                     <View style={styles.categories}>
-                        {itemData.categories.map((category, index) => (
+                        {tournament.categories.map((category, index) => (
                             <View style={styles.categoryContainer} key={index}>
                                 <FontAwesome name='tag' size={16} color='#fff' />
                                 <Text style={styles.category}>{category}</Text>
@@ -851,55 +649,6 @@ export default function TournamentDetails({ route, navigation }) {
                     
                 </View> */}
             </HeaderImageScrollView>
-
-            <View>
-                <Modal
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                    }}
-                >
-                    <View style={styles.view}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.title}>Team Information</Text>
-                            <TextInput
-                                value={teamName}
-                                onChangeText={(teamName) => setTeamName(teamName)}
-                                placeholder="Team Name"
-                                placeholderTextColor="#666666"
-                                autoCorrect={false}
-                            />
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                                <TouchableOpacity
-                                    style={{ ...styles.openButton, backgroundColor: "green" }}
-                                    onPress={() => {
-                                        if (teamName == null) {
-                                            alert("Team Name is Empty")
-                                        } else {
-                                            submitTeam()
-                                            setModalVisible(!modalVisible);
-                                            navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                        }
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>SAVE</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{ ...styles.openButton, backgroundColor: "red" }}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>CANCEL</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-            </View>
-
         </View>
     )
 }

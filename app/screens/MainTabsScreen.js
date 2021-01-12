@@ -31,6 +31,8 @@ import EditProfileScreen from './EditProfileScreen';
 import EventList from './EventList';
 import TournamentList from './TournamentList';
 import TournamentDetails from './TournamentDetails';
+import EventDetails from './EventDetails';
+import TournamentDetailsEvent from './TournamentDetailsEvent';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -62,7 +64,7 @@ export default function MainTabsScreen() {
                 name="Tournament"
                 component={TournamentStackScreen}
                 options={{
-                    tabBarLabel: 'Tournament',
+                    tabBarLabel: 'My Tournament',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="trophy" color={color} size={size} />
                     ),
@@ -157,7 +159,28 @@ const HomeStackScreen = ({ navigation }) => {
                     title: route.params.title
                 })}
             />
-
+            <HomeStack.Screen
+                name="EventDetails"
+                component={EventDetails}
+                options={({ route }) => ({
+                    // title: route.params.title
+                    headerBackTitleVisible: false,
+                    headerTitle: false,
+                    headerTransparent: true,
+                    headerTintColor: '#fff'
+                })}
+            />
+            <HomeStack.Screen
+                name="TournamentDetailsEvent"
+                component={TournamentDetailsEvent}
+                options={({ route }) => ({
+                    // title: route.params.title
+                    headerBackTitleVisible: false,
+                    headerTitle: false,
+                    headerTransparent: true,
+                    headerTintColor: '#fff'
+                })}
+            />
             <HomeStack.Screen
                 name="TournamentList"
                 component={TournamentList}
@@ -176,6 +199,7 @@ const HomeStackScreen = ({ navigation }) => {
                     headerTintColor: '#fff'
                 })}
             />
+
             <HomeStack.Screen
                 name="TeamRegisterScreen"
                 component={TeamRegisterScreen}
@@ -238,8 +262,8 @@ const TournamentStackScreen = ({ navigation }) => {
                 }}
             />
             <TournamentStack.Screen
-                name="CardItemDetails"
-                component={CardItemDetails}
+                name="TournamentDetails"
+                component={TournamentDetails}
                 options={({ route }) => ({
                     // title: route.params.title
                     headerBackTitleVisible: false,

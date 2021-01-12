@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import * as Animatable from 'react-native-animatable'
+import TournamentCard from '../../components/TournamentCard';
 
 const MIN_HEIGHT = Platform.OS == 'ios' ? 90 : 55
 const MAX_HEIGHT = 300
@@ -14,58 +15,32 @@ export default function EventDetails({ route, navigation }) {
     const currentUser = auth().currentUser.uid;
     const navTitleView = useRef(null)
     const [modalVisible, setModalVisible] = useState(false)
-    const [teamName, setTeamName] = useState(null)
+    const [tournaments, setTournaments] = useState(null)
     const [isRegister, setIsRegister] = useState(null)
 
     useEffect(() => {
-        getTeam()
+        getTournaments()
     }, [])
 
-    const getTeam = async () => {
+    const getTournaments = async () => {
         try {
-            const res = await axios.get(`/${itemData.tournamentID}/${currentUser}/team`)
-            setIsRegister(res.data.teamName)
-            console.log(isRegister)
-
+            const res = await axios.get(`/${itemData.eventID}/tournaments`)
+            setTournaments(res.data)
+            console.log(res.data)
         } catch (error) {
 
-        }
-    }
-
-    const submitTeam = async () => {
-        try {
-            const res = await axios.post(`/${currentUser}/${itemData.tournamentID}/team`,
-                {
-                    teamName: teamName
-                })
-            console.log(res + "submit team")
-        } catch (error) {
-            console.log(error)
         }
     }
 
     const buttonType = () => {
-        if (isRegister == null) {
+        if (itemData.hostName == currentUser) {
             return (
                 <Button
-                    title='Register here'
+                    title='Manage Event'
                     color='#6B46C1'
                     onPress={() => {
-                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
+                        navigation.navigate('TournamentTab', { itemData: itemData })
                         setModalVisible(true)
-                        console.log(itemData)
-                    }}
-                    style={{ marginHorizontal: 2 }}
-                />
-            )
-        } else {
-            return (
-                <Button
-                    title='Edit Registration'
-                    color='orange'
-                    onPress={() => {
-                        navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                        // setModalVisible(true)
                         console.log(itemData)
                     }}
                     style={{ marginHorizontal: 2 }}
@@ -92,6 +67,7 @@ export default function EventDetails({ route, navigation }) {
                 renderForeground={() => (
                     <View style={styles.titleContainer}>
                         <Text style={styles.imageTitle}>{itemData.title}</Text>
+
                     </View>
                 )}
                 renderFixedForeground={() => (
@@ -112,41 +88,39 @@ export default function EventDetails({ route, navigation }) {
                             {/* <FontAwesome name='star' size={16} color='#6B46C1' />
                             <Text style={{ marginHorizontal: 2 }}>{itemData.rating}</Text>
                             <Text>({itemData.reviews})</Text> */}
-
                             {buttonType()}
                         </View>
                     </View>
                 </TriggeringView>
                 <View style={[styles.section, styles.sectionLarge]}>
                     <Text style={styles.sectionContent}>{itemData.description}</Text>
-                    <Text style={styles.sectionContent}>Sport Type : {itemData.sportType}</Text>
                     <Text style={styles.sectionContent}>Venue : {itemData.location}</Text>
-                    <Text style={styles.sectionContent}>Number Of Team : {itemData.participants}</Text>
                     <Text style={styles.sectionContent}>Date : {itemData.startDate} to {itemData.endDate}</Text>
-                    <Text style={styles.sectionContent}>Gender : {itemData.gender}</Text>
                 </View>
 
                 <View style={styles.section}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.title}>Participants</Text>
+                        <Text style={styles.title}>Tournaments</Text>
                     </View>
                 </View>
-                <View style={[styles.section, styles.sectionLarge]}>
-
-                </View>
-
-                <View style={styles.section}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.title}>Final Stage</Text>
+                <View style={[styles.section]}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {tournaments && tournaments.map((value, i) => {
+                            return (
+                                <TournamentCard
+                                    value={value}
+                                    key={i}
+                                    onPress={() => {
+                                        navigation.navigate('TournamentDetailsEvent', { tournament: value, event: itemData })
+                                    }} />
+                            )
+                        })}
                     </View>
                 </View>
-                <View style={[styles.section, { height: 250 }]}>
-
-                </View>
 
                 <View style={styles.section}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.title}>Group Stage</Text>
+                        <Text style={styles.title}>List of Collaborators</Text>
                     </View>
                 </View>
                 <View style={[styles.section, { height: 250 }]}>
@@ -166,54 +140,6 @@ export default function EventDetails({ route, navigation }) {
                     
                 </View> */}
             </HeaderImageScrollView>
-
-            <View>
-                <Modal
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                    }}
-                >
-                    <View style={styles.view}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.title}>Team Information</Text>
-                            <TextInput
-                                value={teamName}
-                                onChangeText={(teamName) => setTeamName(teamName)}
-                                placeholder="Team Name"
-                                placeholderTextColor="#666666"
-                                autoCorrect={false}
-                            />
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                                <TouchableOpacity
-                                    style={{ ...styles.openButton, backgroundColor: "green" }}
-                                    onPress={() => {
-                                        if (teamName == null) {
-                                            alert("Team Name is Empty")
-                                        } else {
-                                            submitTeam()
-                                            setModalVisible(!modalVisible);
-                                            navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                        }
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>SAVE</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{ ...styles.openButton, backgroundColor: "red" }}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                        // navigation.navigate('TeamRegisterScreen', { itemData: itemData, teamName: teamName })
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>CANCEL</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-            </View>
 
         </View>
     )

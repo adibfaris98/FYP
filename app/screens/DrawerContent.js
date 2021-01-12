@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Avatar, Caption, Drawer, Paragraph, Title } from 'react-native-paper'
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { AuthContext } from '../navigation/AuthProvider'
 
@@ -15,21 +16,6 @@ export default function DrawerContent({props,navigation}) {
     const { user, logout, name, email, photoURL} = useContext(AuthContext)
 
     const userAuth = auth().currentUser;
-    // const [name, setName] = useState()
-    // const [email, setEmail] = useState()
-
-    // useEffect(() => {
-    //     async function main() {
-    //         try {
-    //             const {data} = await axios.get(`/user/${userAuth.uid}`)
-    //             setName(data.name)
-    //             setEmail(data.email)
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    //     main()
-    // }, [userAuth,email,name])
 
     return (
         
@@ -55,7 +41,7 @@ export default function DrawerContent({props,navigation}) {
                             </View>
                         </View>
 
-                        <View style={styles.row}>
+                        {/* <View style={styles.row}>
                             <View style={styles.section}>
                                 <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
                                 <Caption style={styles.caption}>Following</Caption>
@@ -64,7 +50,7 @@ export default function DrawerContent({props,navigation}) {
                                 <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
                                 <Caption style={styles.caption}>Follower</Caption>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
                     {/* Drawer Content */}
                     <Drawer.Section style={styles.drawerSection}>
@@ -97,7 +83,7 @@ export default function DrawerContent({props,navigation}) {
                         />
                     </Drawer.Section>
 
-                    <Drawer.Section title="Become Organizer ?">
+                    <Drawer.Section title="Create Tournament/Event ?">
                         {/* <DrawerItem
                             icon={({ color, size }) => (
                                 <Entypo
@@ -112,13 +98,13 @@ export default function DrawerContent({props,navigation}) {
                         /> */}
                         <DrawerItem
                             icon={({ color, size }) => (
-                                <MaterialCommunityIcons
-                                    name="tournament"
+                                <FontAwesome5
+                                    name="users"
                                     color={color}
                                     size={size}
                                 />
                             )}
-                            label="Create a Tournament"
+                            label="Organizer Dashboard"
                             onPress={() => {
                                 navigation.navigate('HomeOrganizer')
                             }}

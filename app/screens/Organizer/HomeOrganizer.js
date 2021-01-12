@@ -60,7 +60,7 @@ export default function HomeOrganizer({ navigation }) {
                     <TouchableOpacity
                         style={styles.categoryBtn}
                         onPress={() =>
-                            navigation.navigate('TournamentList', { title: 'Tournament' })
+                            navigation.navigate('CollaborationList', { title: 'My Collaboration' })
                         }>
                         <View style={styles.categoryIcon}>
                             <MaterialCommunityIcons
@@ -69,7 +69,7 @@ export default function HomeOrganizer({ navigation }) {
                                 color="#6B46C1" />
 
                         </View>
-                        <Text style={styles.categoryBtnTxt}>Tournament</Text>
+                        <Text style={styles.categoryBtnTxt}>My Collaboration</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -83,7 +83,7 @@ export default function HomeOrganizer({ navigation }) {
                                 size={32}
                                 color="#6B46C1" />
                         </View>
-                        <Text style={styles.categoryBtnTxt}>Event</Text>
+                        <Text style={styles.categoryBtnTxt}>My Event</Text>
                     </TouchableOpacity>
 
                 </View>

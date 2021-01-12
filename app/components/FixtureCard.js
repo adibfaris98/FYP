@@ -3,20 +3,23 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { DataTable, Card, Title, Paragraph, Button, Dialog, Portal } from 'react-native-paper'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModalForm from './ModalForm';
+import ModalFormEditFixture from './ModalFormEditFixture';
 
-export default function FixtureCard({ fixture, i, tournamentID, setSubmit, submit }) {
+export default function FixtureCard({ fixture, i, tournamentID, setSubmit, submit, eventID }) {
     const [isMatchStart, setIsMatchStart] = useState(fixture.isMatchStart)
     const [isFulltime, setIsFullTime] = useState(fixture.isFulltime)
     return (
-        <Card key={i} style={{ borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10, paddingTop: 15}}>
+        <Card key={i} style={{ borderWidth: 1, borderColor: "grey", borderRadius: 5, width: "95%", margin: 10, paddingTop: 15 }}>
             {isMatchStart == false ?
-                <Button style={{flexDirection: "row", alignSelf:'center'}} onPress={() => {
+                <Button style={{ flexDirection: "row", alignSelf: 'center' }} onPress={() => {
                     setIsMatchStart(true)
                 }}>
                     Start Match
                 </Button>
                 : fixture.isFulltime == false ?
-                    <ModalForm fixture={fixture} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} isMatchStart={isMatchStart} isFulltime={isFulltime} setIsFullTime={setIsFullTime} /> : null
+                    eventID == undefined ? <ModalForm fixture={fixture} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} isMatchStart={isMatchStart} isFulltime={isFulltime} setIsFullTime={setIsFullTime} />
+                        : <ModalFormEditFixture fixture={fixture} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} isMatchStart={isMatchStart} isFulltime={isFulltime} setIsFullTime={setIsFullTime} eventID={eventID} />
+                    : null
             }
 
             <Card.Content style={{ flexDirection: 'row', justifyContent: 'space-around' }}>

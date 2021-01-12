@@ -8,7 +8,25 @@ import axios from 'axios'
 import { AuthContext } from '../navigation/AuthProvider'
 
 export default function Profile() {
-    const userAuth = auth().currentUser;
+    const userAuth = auth().currentUser.uid;
+
+    const [tournament, setTournament] = useState()
+    const [event, setEvent] = useState()
+    
+    useEffect(()=>{
+        getUser()
+        // console.log(tournament.length)
+    },[])
+
+    const getUser = async() =>{
+        try {
+            const res = await axios.get(`/user/${userAuth}`)
+            setTournament(res.data.tournamentsMgr)
+            setEvent(res.data.eventsMgr)
+        } catch (error) {
+            
+        }
+    }
 
     const { name, email, about, country, phoneNumber, photoURL } = useContext(AuthContext)
 
@@ -52,12 +70,12 @@ export default function Profile() {
                     borderRightColor: '#dddddd',
                     borderRightWidth: 1
                 }]}>
-                    <Title>4</Title>
-                    <Caption>Tournament created</Caption>
+                    <Title>{tournament && tournament.length}</Title>
+                    <Caption>Tournament joined</Caption>
                 </View>
                 <View style={styles.infoBox}>
-                    <Title>8</Title>
-                    <Caption>Tournament joined</Caption>
+                    <Title>{event && event.length}</Title>
+                    <Caption>Event joined</Caption>
                 </View>
             </View>
 

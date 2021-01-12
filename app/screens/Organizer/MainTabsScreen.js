@@ -17,6 +17,11 @@ import Tournament from './TournamentScreen'
 import LoginScreen from '../LoginScreen'
 
 //home stack screen
+import TournamentList from './TournamentList';
+import TournamentDetails from './TournamentDetails';
+import EventList from './EventList';
+import EventDetails from './EventDetails';
+import TournamentDetailsEvent from './TournamentDetailsEvent';
 
 //tournament
 import TeamRegisterScreen from './TeamRegisterScreen'
@@ -27,10 +32,8 @@ import TournamentTab from './TournamentTab'
 
 //profile stack screen
 import EditProfileScreen from './EditProfileScreen';
-import TournamentList from './TournamentList';
-import TournamentDetails from './TournamentDetails';
-import EventList from './EventList';
-import EventDetails from './EventDetails';
+import CollaborationList from './CollaborationList';
+import CollaborationTab from './Collaboration/CollaborationTab';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -136,7 +139,7 @@ const HomeStackScreen = ({ navigation }) => {
                                     width: 100,
                                     height: 50,
                                 }}
-                                
+
                                 source={{
                                     uri: 'https://firebasestorage.googleapis.com/v0/b/sports-management-system-v2.appspot.com/o/website%2Flogo-organizer.svg?alt=media&token=ae413f4a-bde9-4bda-b857-4b61747fb80d',
                                 }}
@@ -199,33 +202,58 @@ const HomeStackScreen = ({ navigation }) => {
                 })}
             />
             <HomeStack.Screen
-                name="TeamRegisterScreen"
-                component={TeamRegisterScreen}
+                name="CollaborationList"
+                component={CollaborationList}
                 options={({ route }) => ({
-                    title: 'Team Registration'
+                    title: route.params.title
                 })}
             />
             <HomeStack.Screen
-                name="PlayerRegisterScreen"
-                component={PlayerRegisterScreen}
+                name="TournamentDetailsEvent"
+                component={TournamentDetailsEvent}
                 options={({ route }) => ({
-                    title: 'Player Registration'
+                    // title: route.params.title
+                    headerBackTitleVisible: false,
+                    headerTitle: false,
+                    headerTransparent: true,
+                    headerTintColor: '#fff'
                 })}
             />
             <HomeStack.Screen
-                name="PlayerDetailsScreen"
-                component={PlayerDetailsScreen}
+                name="CollaborationTab"
+                component={CollaborationTab}
                 options={({ route }) => ({
-                    title: 'Player Details'
+                    // title: 'Organize',
+                    // headerRight: () => (
+                    //     <AntDesign.Button
+                    //         color='#333'
+                    //         name='setting'
+                    //         size={25}
+                    //         backgroundColor="#fff"
+                    //         onPress={() => {  }}>
+                    //     </AntDesign.Button>
+                    // )
+                    headerShown: false
                 })}
             />
             <HomeStack.Screen
-                name="EditPlayerScreen"
-                component={EditPlayerScreen}
+                name="TournamentTab"
+                component={TournamentTab}
                 options={({ route }) => ({
-                    title: 'Edit Player'
+                    // title: 'Organize',
+                    // headerRight: () => (
+                    //     <AntDesign.Button
+                    //         color='#333'
+                    //         name='setting'
+                    //         size={25}
+                    //         backgroundColor="#fff"
+                    //         onPress={() => {  }}>
+                    //     </AntDesign.Button>
+                    // )
+                    headerShown: false
                 })}
             />
+
 
         </HomeStack.Navigator>
     )
