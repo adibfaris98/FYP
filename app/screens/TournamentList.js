@@ -9,11 +9,11 @@ import Card from '../components/Card'
 export default function TournamentList({ navigation }) {
 
     const [tournament, setTournament] = useState(null)
-    const [render, setRender] = useState(false)
+    // const [render, setRender] = useState(false)
 
     useEffect(() => {
         getTournament()
-    }, [render])
+    }, [])
 
     async function getTournament() {
         try {
@@ -30,7 +30,7 @@ export default function TournamentList({ navigation }) {
         return (
             <Card
                 itemData={item}
-                onPress={() => navigation.navigate('TournamentDetails', { itemData: item , render, setRender})}
+                onPress={() => navigation.navigate('TournamentDetails', { itemData: item})}
             />
         )
     }

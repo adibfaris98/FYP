@@ -8,7 +8,7 @@ import axios from 'axios'
 
 export default function ApproveRegistration({ route, navigation }) {
     const { tournamentID } = route.params.tournament
-    const [pendingList, setPendingList] = useState(null)
+    const [pendingList, setPendingList] = useState([])
     const [submit, setSubmit] = useState(false)
 
     useEffect(() => {
@@ -17,9 +17,10 @@ export default function ApproveRegistration({ route, navigation }) {
 
     const getPendingList = async () => {
         try {
-            const response = await axios.get(`/organizer/${tournamentID}/pendingList`)
+            const response = await axios.get(`/${tournamentID}/pendingList`)
             const data = response.data
             setPendingList(data)
+            console.log(response.data)
         } catch (error) {
 
         }
@@ -27,7 +28,7 @@ export default function ApproveRegistration({ route, navigation }) {
 
     return (
         <View style={{ flex: 1 , padding:5 }}>
-            {pendingList && pendingList != null ?
+            {pendingList ?
                 <DataTable>
                     <DataTable.Header>
                         <DataTable.Title>Team Name</DataTable.Title>
@@ -35,7 +36,7 @@ export default function ApproveRegistration({ route, navigation }) {
                         <DataTable.Title>Email</DataTable.Title>
                     </DataTable.Header>
 
-                    {pendingList && pendingList.map((item, i) => (
+                    {pendingList.map((item, i) => (
                         <TouchableOpacity
                             key={i}
                             onPress={() => {

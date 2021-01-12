@@ -14,15 +14,15 @@ const MAX_HEIGHT = 300
 export default function TournamentDetails({ route, navigation }) {
     const itemData = route.params.itemData
     const { name } = useContext(AuthContext)
-    const { render, setRender } = route.params
-    const managerRef = itemData.managerRef.find(obj => obj.managerID == currentUser)
+    // const { render, setRender } = route.params
     const currentUser = auth().currentUser.uid;
+
     const navTitleView = useRef(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [teamName, setTeamName] = useState(null)
-    const [isRegister, setIsRegister] = useState(null)
-    const [format, setFormat] = useState(null)
-    const [registerReq, setRegisterRequest] = useState(itemData.requestListMgr.find(obj => obj.managerID == currentUser))
+    const [isRegister, setIsRegister] = useState(false)
+    const [managerRef, setManagerRef] = useState(itemData.managerRef.find(obj => obj.uid == currentUser))
+    const [registerReq, setRegisterReq] = useState(itemData.requestListMgr.find(obj => obj.managerID == currentUser))
     const [officialTeam, setOfficialTeam] = useState(null)
     const [submit, setSubmit] = useState(false)
 
@@ -63,18 +63,16 @@ export default function TournamentDetails({ route, navigation }) {
 
     useEffect(() => {
         getTeam()
-        // getOfficialTeamList()
+        getOfficialTeamList()
         getSeeding()
         getFixtureGroup()
         getTable()
         getParticipants()
         getFixtureFinal()
-        getFormat()
-        // console.log(itemData.requestListMgr)
-        // console.log(isRegister)
+        // getFormat()
+        console.log(managerRef)
+        console.log(registerReq)
     }, [submit])
-
-
 
     const sendRegisterRequest = () => {
         axios.post(`/${itemData.tournamentID}/${itemData.hostName}/request`, {
@@ -92,14 +90,8 @@ export default function TournamentDetails({ route, navigation }) {
             }
         }).then(() => {
             setSubmit(true)
-            setRegisterRequest(true)
+            setRegisterReq(true)
         })
-    }
-
-    const getFormat = async () => {
-        const res = await axios.get(`/${itemData.tournamentID}/format`)
-        setFormat(res.data)
-        // console.log(res.data)
     }
 
     const getTeam = async () => {
@@ -206,79 +198,6 @@ export default function TournamentDetails({ route, navigation }) {
 
         }
     }
-
-    // const ButtonType = () => (
-
-    // )
-
-
-    // const buttonType = () => {
-    //     if (itemData.registrationStatus == true) {
-    //         let obj = itemData.requestListMgr.find(obj => obj.managerID === currentUser)
-    //         console.log(obj)
-    //         console.log("asdasdasasd", isRegister)
-    //         if (obj.length > 0) {
-    //             if (isRegister && isRegister == undefined) {
-    //                 if (Number(officialTeam.length) < Number(itemData.participants)) {
-    //                     return (
-    //                         <Button
-    //                             title='Register here'
-    //                             color='#6B46C1'
-    //                             onPress={() => {
-    //                                 // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                                 setModalVisible(true)
-    //                             }}
-    //                             style={{ marginHorizontal: 2 }}
-    //                         />
-    //                     )
-    //                 }
-    //             } else {
-    //                 return (
-    //                     <Button
-    //                         title='Edit Registration'
-    //                         color='orange'
-    //                         onPress={() => {
-    //                             navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                             // setModalVisible(true)
-    //                         }}
-    //                         style={{ marginHorizontal: 2 }}
-    //                     />
-    //                 )
-    //             }
-    //         }
-    //     }
-    // }
-
-    // const buttonType = () => {
-    //     if (!obj) {
-    //         return (
-    //             <Button
-    //                 title='Request to register'
-    //                 color='#6B46C1'
-    //                 onPress={() => {
-    //                     // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                     setModalVisible(true)
-    //                 }}
-    //                 style={{ marginHorizontal: 2 }}
-    //             />
-    //         )
-    //     } else {
-    //         if (itemData.registerStatus == true && obj.status == "accepted") {
-    //             return (
-    //                 <Button
-    //                     title='Register here'
-    //                     color='#6B46C1'
-    //                     onPress={() => {
-    //                         // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-    //                         setModalVisible(true)
-    //                     }}
-    //                     style={{ marginHorizontal: 2 }}
-    //                 />
-    //             )
-    //         }
-    //     }
-    // }
-
     return (
         <View style={styles.container}>
             <StatusBar barStyle='light-content' />
@@ -315,11 +234,8 @@ export default function TournamentDetails({ route, navigation }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.title}>Overview</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                            {/* <FontAwesome name='star' size={16} color='#6B46C1' />
-                            <Text style={{ marginHorizontal: 2 }}>{itemData.rating}</Text>
-                            <Text>({itemData.reviews})</Text> */}
 
-                            {/* {!obj ?
+                            {!registerReq &&
                                 <Button
                                     title='Request to register'
                                     color='#6B46C1'
@@ -328,32 +244,11 @@ export default function TournamentDetails({ route, navigation }) {
                                         sendRegisterRequest()
                                     }}
                                     style={{ marginHorizontal: 2 }}
-                                /> : itemData && itemData.registrationStatus == true && isRegister == false ?
-                                    <Button
-                                        title='Register here'
-                                        color='#6B46C1'
-                                        onPress={() => {
-                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    /> : null
-                            } */}
-
-                            {!registerReq && <Button
-                                title='Request to register'
-                                color='#6B46C1'
-                                onPress={() => {
-                                    // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                    sendRegisterRequest()
-                                }}
-                                style={{ marginHorizontal: 2 }}
-                            />}
+                                />}
 
                             {itemData.registrationStatus && managerRef ?
                                 !isRegister ?
-
-                                    <Button
+                                    (<Button
                                         title='Register here'
                                         color='#6B46C1'
                                         onPress={() => {
@@ -361,9 +256,9 @@ export default function TournamentDetails({ route, navigation }) {
                                             setModalVisible(true)
                                         }}
                                         style={{ marginHorizontal: 2 }}
-                                    />
+                                    />)
                                     :
-                                    <Button
+                                    (<Button
                                         title='Edit Registration'
                                         color='orange'
                                         onPress={() => {
@@ -371,13 +266,9 @@ export default function TournamentDetails({ route, navigation }) {
                                             // setModalVisible(true)
                                         }}
                                         style={{ marginHorizontal: 2 }}
-                                    />
-
+                                    />)
                                 : null
                             }
-
-
-
 
                         </View>
                     </View>
