@@ -11,7 +11,7 @@ import ModalForm from '../../components/ModalForm'
 import FixtureCard from '../../components/FixtureCard';
 
 export default function GroupStage({ route, navigation }) {
-    const { tournamentID } = route.params.tournament
+    const { tournamentID , hostName } = route.params.tournament
     const newFixture = route.params.res
     const [seeding, setSeeding] = useState([])
     const [fixtureGroup, setFixtureGroup] = useState([])
@@ -307,7 +307,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group A</Text>
 
                             {fixtureA.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName} />
                             })}
                         </View>
                         : <Text>Currently there is no Fixture until draw fixture finised.</Text>
@@ -324,7 +324,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group B</Text>
 
                             {fixtureB.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -341,7 +341,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group C</Text>
 
                             {fixtureC.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -357,7 +357,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group D</Text>
 
                             {fixtureD.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -373,7 +373,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group E</Text>
 
                             {fixtureE.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -389,7 +389,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group F</Text>
 
                             {fixtureF.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -405,7 +405,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group G</Text>
 
                             {fixtureG.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null
@@ -421,7 +421,7 @@ export default function GroupStage({ route, navigation }) {
                             }}>Group H</Text>
 
                             {fixtureH.map((value, i) => {
-                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit}/>
+                                return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                             })}
                         </View>
                         : null

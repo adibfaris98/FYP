@@ -3,12 +3,12 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DataTable, Card, Title, Paragraph } from 'react-native-paper'
+import { DataTable, Card, Title, Paragraph, Caption } from 'react-native-paper'
 import axios from 'axios'
 import FixtureCard from '../../components/FixtureCard';
 
 export default function FinalStage({ route, navigation }) {
-    const { tournamentID, gGroupNumber } = route.params.tournament
+    const { tournamentID, gGroupNumber, hostName } = route.params.tournament
     const [participants, setParticipant] = useState(null)
     const [finalStageList_semi, setFinalStageList_semi] = useState(null)
     const [finalStageList_quarter, setFinalStageList_quarter] = useState(null)
@@ -54,7 +54,7 @@ export default function FinalStage({ route, navigation }) {
     }
     return (
         <ScrollView>
-            <View style={{padding: 5 , flex:1}}>
+            <View style={{ padding: 5, flex: 1 }}>
                 <Text style={{
                     // alignSelf: 'center',
                     fontSize: 18,
@@ -84,7 +84,10 @@ export default function FinalStage({ route, navigation }) {
                             <DataTable.Cell>{finalStageList_semi.group_A2.teamName}</DataTable.Cell>
                         </DataTable.Row>
                     </DataTable>
-                    : <Text>Currently final-stage participants list is empty. Kindly go to the to finalize qualified team in standings. Make sure all the results in the group-stage is updated.</Text>
+                    :
+                    <View style={{ justifyContent: 'center' }}>
+                        <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently final-stage participants list is empty. Kindly go to the to finalize qualified team in standings. Make sure all the results in the group-stage is updated.</Caption>
+                    </View>
                 }
 
                 <Text style={{
@@ -105,7 +108,7 @@ export default function FinalStage({ route, navigation }) {
                         }}>Semi Final</Text>
 
                         {fixture_semi.map((value, i) => {
-                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName} />
                         })}
                     </View>
                     : <Text>Currently not available.</Text>
@@ -121,7 +124,7 @@ export default function FinalStage({ route, navigation }) {
                         }}>3rd Place</Text>
 
                         {fixture_3rd.map((value, i) => {
-                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                         })}
                     </View>
 
@@ -138,7 +141,7 @@ export default function FinalStage({ route, navigation }) {
                         }}>Final</Text>
 
                         {fixture_final.map((value, i) => {
-                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} />
+                            return <FixtureCard key={i} fixture={value} tournamentID={tournamentID} setSubmit={setSubmit} submit={submit} tournamentHost={hostName}/>
                         })}
                     </View>
                     : null
