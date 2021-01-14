@@ -14,15 +14,14 @@ const MAX_HEIGHT = 300
 export default function TournamentDetails({ route, navigation }) {
     const itemData = route.params.itemData
     const { name } = useContext(AuthContext)
-    // const { render, setRender } = route.params
     const currentUser = auth().currentUser.uid;
 
     const navTitleView = useRef(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [teamName, setTeamName] = useState(null)
     const [isRegister, setIsRegister] = useState(false)
-    const [managerRef, setManagerRef] = useState(itemData.managerRef.find(obj => obj.uid == currentUser))
-    const [registerReq, setRegisterReq] = useState(itemData.requestListMgr.find(obj => obj.managerID == currentUser))
+    const managerRef = itemData.managerRef.find(obj => obj.uid == currentUser)
+    const [registerReq, setRegisterReq] = useState()
     const [officialTeam, setOfficialTeam] = useState(null)
     const [submit, setSubmit] = useState(false)
 
@@ -62,6 +61,7 @@ export default function TournamentDetails({ route, navigation }) {
     const [tableH, setTableH] = useState(null)
 
     useEffect(() => {
+        getRequestList()
         getTeam()
         getOfficialTeamList()
         getSeeding()
@@ -70,8 +70,6 @@ export default function TournamentDetails({ route, navigation }) {
         getParticipants()
         getFixtureFinal()
         // getFormat()
-        console.log(managerRef)
-        console.log(registerReq)
     }, [submit])
 
     const sendRegisterRequest = () => {
@@ -94,6 +92,17 @@ export default function TournamentDetails({ route, navigation }) {
         })
     }
 
+    const getRequestList = async () => {
+        try {
+            const res = await axios.get(`/tournament/${itemData.tournamentID}`)
+            let data = res.data.requestListMgr
+            let isRequest = data.some(obj => obj.managerID == currentUser)
+            setRegisterReq(isRequest)
+        } catch (error) {
+
+        }
+    }
+
     const getTeam = async () => {
         try {
             const res = await axios.get(`/${itemData.tournamentID}/${currentUser}/team`)
@@ -110,7 +119,7 @@ export default function TournamentDetails({ route, navigation }) {
 
     const submitTeam = async () => {
         try {
-            const res = await axios.post(`/${currentUser}/${itemData.tournamentID}/team`,
+            const res = await axios.post(`/${currentUser}/${itemData.tournamentID}/registerTeam`,
                 {
                     teamName: teamName
                 })
@@ -121,7 +130,7 @@ export default function TournamentDetails({ route, navigation }) {
 
     const getOfficialTeamList = async () => {
         try {
-            const res = await axios.get(`/organizer/${itemData.tournamentID}/officialTeam`)
+            const res = await axios.get(`/${itemData.tournamentID}/officialTeam`)
             setOfficialTeam(res.data)
             // console.log(res.data.length)
         } catch (error) {
@@ -235,7 +244,8 @@ export default function TournamentDetails({ route, navigation }) {
                         <Text style={styles.title}>Overview</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
 
-                            {!registerReq &&
+                            {!itemData.isGroupDraw ?
+                                !registerReq &&
                                 <Button
                                     title='Request to register'
                                     color='#6B46C1'
@@ -244,31 +254,36 @@ export default function TournamentDetails({ route, navigation }) {
                                         sendRegisterRequest()
                                     }}
                                     style={{ marginHorizontal: 2 }}
-                                />}
-
-                            {itemData.registrationStatus && managerRef ?
-                                !isRegister ?
-                                    (<Button
-                                        title='Register here'
-                                        color='#6B46C1'
-                                        onPress={() => {
-                                            // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    />)
-                                    :
-                                    (<Button
-                                        title='Edit Registration'
-                                        color='orange'
-                                        onPress={() => {
-                                            navigation.navigate('TeamRegisterScreen', { itemData: itemData })
-                                            // setModalVisible(true)
-                                        }}
-                                        style={{ marginHorizontal: 2 }}
-                                    />)
+                                />
                                 : null
                             }
+                            {!itemData.isGroupDraw ?
+                                itemData.registrationStatus && managerRef ?
+                                    !isRegister ?
+                                        (<Button
+                                            title='Register here'
+                                            color='#6B46C1'
+                                            onPress={() => {
+                                                // navigation.navigate('TeamRegisterScreen', { itemData: itemData })
+                                                setModalVisible(true)
+                                            }}
+                                            style={{ marginHorizontal: 2 }}
+                                        />)
+                                        :
+                                        (<Button
+                                            title='Edit Registration'
+                                            color='orange'
+                                            onPress={() => {
+                                                navigation.navigate('TeamRegisterScreen', { itemData: itemData })
+                                                // setModalVisible(true)
+                                            }}
+                                            style={{ marginHorizontal: 2 }}
+                                        />)
+                                    : null
+
+                                : null
+                            }
+
 
                         </View>
                     </View>
@@ -311,7 +326,7 @@ export default function TournamentDetails({ route, navigation }) {
                         <Text style={styles.title}>Official Team List</Text>
                     </View>
                 </View>
-                {officialTeam && officialTeam != null ?
+                {officialTeam ?
                     (
                         <View>
                             <View style={[styles.section, styles.sectionLarge]}>
@@ -504,7 +519,7 @@ export default function TournamentDetails({ route, navigation }) {
                 }
 
 
-                {tableA != null ?
+                {tableA ?
                     <View style={[styles.section]}>
                         {/* Table A */}
                         {tableA != null ?
@@ -661,7 +676,7 @@ export default function TournamentDetails({ route, navigation }) {
                             </DataTable.Row>
                         </DataTable>
                         : <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
-                            <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently not Available</Caption>
+                            <Caption style={{ textAlign: 'center', fontSize: 16 }}>Currently not Available</Caption>
                         </View>
                     }
 

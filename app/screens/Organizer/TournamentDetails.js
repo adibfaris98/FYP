@@ -64,7 +64,7 @@ export default function CardItemDetails({ route, navigation }) {
 
     const getOfficialTeamList = async () => {
         try {
-            const res = await axios.get(`/organizer/${itemData.tournamentID}/officialTeam`)
+            const res = await axios.get(`/${itemData.tournamentID}/officialTeam`)
             setOfficialTeam(res.data)
         } catch (error) {
 
@@ -231,7 +231,7 @@ export default function CardItemDetails({ route, navigation }) {
                     </View>
                 </View>
 
-                {officialTeam && officialTeam != null ?
+                {officialTeam ?
                     (
                         <View>
                             <View style={[styles.section, { padding: 5 }]}>
@@ -307,14 +307,17 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureA.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} tournamentHost={itemData.hostName} />
                                     )
                                 })}
                             </View>
                             : null
                         }
                     </View>
-                    : <Text style={styles.sectionContent}>For grouping, the game will follow {itemData.gStage} format with.</Text>
+                    :
+                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
+                        <Caption style={styles.sectionContent}>For grouping, the game will follow {itemData.gStage} format with.</Caption>
+                    </View>
                 }
 
                 {/* Group B */}
@@ -359,7 +362,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureB.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} tournamentHost={itemData.hostName}/>
                                     )
                                 })}
                             </View>
@@ -411,7 +414,7 @@ export default function CardItemDetails({ route, navigation }) {
                                 }}>Group Fixtures</Text>
                                 {fixtureC.map((value, i) => {
                                     return (
-                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} />
+                                        <FixtureCard key={i} fixture={value} tournamentID={itemData.tournamentID} tournamentHost={itemData.hostName}/>
                                     )
                                 })}
                             </View>
@@ -420,24 +423,63 @@ export default function CardItemDetails({ route, navigation }) {
                     </View>
                     : null
                 }
-
-                <View style={[styles.section]}>
-                    {/* Table A */}
-                    {tableA != null ?
-                        <View>
-                            <Text style={{
-                                // alignSelf: 'center',
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#333'
-                            }}>Standings</Text>
-                            <View style={[styles.section], { margin: 0, padding: 0 }}>
+                {tableA ?
+                    <View style={[styles.section]}>
+                        {/* Table A */}
+                        {tableA != null ?
+                            <View>
                                 <Text style={{
                                     // alignSelf: 'center',
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                     color: '#333'
-                                }}>Group A</Text>
+                                }}>Standings</Text>
+                                <View style={[styles.section], { margin: 0, padding: 0 }}>
+                                    <Text style={{
+                                        // alignSelf: 'center',
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        color: '#333'
+                                    }}>Group A</Text>
+                                    <DataTable>
+                                        <DataTable.Header>
+                                            <DataTable.Title>No.</DataTable.Title>
+                                            <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
+                                            <DataTable.Title numeric>MP</DataTable.Title>
+                                            <DataTable.Title numeric>W</DataTable.Title>
+                                            <DataTable.Title numeric>D</DataTable.Title>
+                                            <DataTable.Title numeric>L</DataTable.Title>
+                                            <DataTable.Title numeric>Pts</DataTable.Title>
+                                        </DataTable.Header>
+
+                                        {tableA.map((value, i) => {
+                                            return (
+                                                <DataTable.Row key={i}>
+                                                    <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                                    <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
+                                                    <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                                    <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                                    <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                                    <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                                    <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                                </DataTable.Row>
+                                            )
+                                        })}
+                                    </DataTable>
+                                </View>
+                            </View>
+                            : null
+                        }
+
+                        {/* Table B */}
+                        {tableB != null ?
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={{
+                                    // alignSelf: 'center',
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#333'
+                                }}>Group B</Text>
                                 <DataTable>
                                     <DataTable.Header>
                                         <DataTable.Title>No.</DataTable.Title>
@@ -449,7 +491,7 @@ export default function CardItemDetails({ route, navigation }) {
                                         <DataTable.Title numeric>Pts</DataTable.Title>
                                     </DataTable.Header>
 
-                                    {tableA.map((value, i) => {
+                                    {tableB.map((value, i) => {
                                         return (
                                             <DataTable.Row key={i}>
                                                 <DataTable.Cell>{i + 1}</DataTable.Cell>
@@ -464,86 +506,47 @@ export default function CardItemDetails({ route, navigation }) {
                                     })}
                                 </DataTable>
                             </View>
-                        </View>
-                        : null
-                    }
+                            : null
+                        }
 
-                    {/* Table B */}
-                    {tableB != null ?
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={{
-                                // alignSelf: 'center',
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#333'
-                            }}>Group B</Text>
-                            <DataTable>
-                                <DataTable.Header>
-                                    <DataTable.Title>No.</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 2 }}>Team</DataTable.Title>
-                                    <DataTable.Title numeric>MP</DataTable.Title>
-                                    <DataTable.Title numeric>W</DataTable.Title>
-                                    <DataTable.Title numeric>D</DataTable.Title>
-                                    <DataTable.Title numeric>L</DataTable.Title>
-                                    <DataTable.Title numeric>Pts</DataTable.Title>
-                                </DataTable.Header>
+                        {/* Table C */}
+                        {tableC != null ?
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={{
+                                    // alignSelf: 'center',
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#333'
+                                }}>Group C</Text>
+                                <DataTable>
+                                    <DataTable.Header>
+                                        <DataTable.Title>No.</DataTable.Title>
+                                        <DataTable.Title>Team</DataTable.Title>
+                                        <DataTable.Title numeric>MP</DataTable.Title>
+                                        <DataTable.Title numeric>W</DataTable.Title>
+                                        <DataTable.Title numeric>D</DataTable.Title>
+                                        <DataTable.Title numeric>L</DataTable.Title>
+                                        <DataTable.Title numeric>Pts</DataTable.Title>
+                                    </DataTable.Header>
 
-                                {tableB.map((value, i) => {
-                                    return (
-                                        <DataTable.Row key={i}>
-                                            <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 2 }}>{value.teamName}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.win}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.points}</DataTable.Cell>
-                                        </DataTable.Row>
-                                    )
-                                })}
-                            </DataTable>
-                        </View>
-                        : null
-                    }
-
-                    {/* Table C */}
-                    {tableC != null ?
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={{
-                                // alignSelf: 'center',
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#333'
-                            }}>Group C</Text>
-                            <DataTable>
-                                <DataTable.Header>
-                                    <DataTable.Title>No.</DataTable.Title>
-                                    <DataTable.Title>Team</DataTable.Title>
-                                    <DataTable.Title numeric>MP</DataTable.Title>
-                                    <DataTable.Title numeric>W</DataTable.Title>
-                                    <DataTable.Title numeric>D</DataTable.Title>
-                                    <DataTable.Title numeric>L</DataTable.Title>
-                                    <DataTable.Title numeric>Pts</DataTable.Title>
-                                </DataTable.Header>
-
-                                {tableC.map((value, i) => {
-                                    return (
-                                        <DataTable.Row key={i}>
-                                            <DataTable.Cell>{i + 1}</DataTable.Cell>
-                                            <DataTable.Cell>{value.teamName}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.win}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
-                                            <DataTable.Cell numeric>{value.points}</DataTable.Cell>
-                                        </DataTable.Row>
-                                    )
-                                })}
-                            </DataTable>
-                        </View>
-                        : null
-                    }
-                </View>
+                                    {tableC.map((value, i) => {
+                                        return (
+                                            <DataTable.Row key={i}>
+                                                <DataTable.Cell>{i + 1}</DataTable.Cell>
+                                                <DataTable.Cell>{value.teamName}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.matches}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.win}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.draw}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.lost}</DataTable.Cell>
+                                                <DataTable.Cell numeric>{value.points}</DataTable.Cell>
+                                            </DataTable.Row>
+                                        )
+                                    })}
+                                </DataTable>
+                            </View> : null
+                        }
+                    </View> : null
+                }
 
                 <View style={styles.section}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -575,10 +578,13 @@ export default function CardItemDetails({ route, navigation }) {
                                 <DataTable.Cell>{finalStageList_semi.group_A2.teamName}</DataTable.Cell>
                             </DataTable.Row>
                         </DataTable>
-                        : <Text>Currently final-stage participants list is empty.
-                        Kindly go to the to finalize qualified
-                        team in standings. Make sure all the results in the
-                group-stage is updated.</Text>
+                        :
+                        <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
+                            <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently final-stage participants list is empty.
+                            Kindly go to the to finalize qualified
+                            team in standings. Make sure all the results in the
+                group-stage is updated.</Caption>
+                        </View>
                     }
 
                     {fixture_semi && fixture_semi != null ?
