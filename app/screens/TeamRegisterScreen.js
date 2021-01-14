@@ -201,8 +201,12 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => {
-                            editTeam()
-                            hideDialog()
+                            if (teamName == "") {
+                                alert('Field cannot be empty')
+                            } else {
+                                editTeam()
+                                hideDialog()
+                            }
                         }}>Done</Button>
                         <Button onPress={hideDialog}>Cancel</Button>
                     </Dialog.Actions>
@@ -329,11 +333,15 @@ export default function TeamRegisterScreen({ route, navigation }) {
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => {
+                            if (name == "" || address == "" || identificationID == "" || gender == "") {
+                                alert('Field cannot be empty')
+                            } else {
+                                hideDialog2()
+                                addPlayer()
+                                submitPlayer()
+                                console.log(submit)
+                            }
 
-                            hideDialog2()
-                            addPlayer()
-                            submitPlayer()
-                            console.log(submit)
                         }}>Add</Button>
                         <Button onPress={hideDialog2}>Cancel</Button>
                     </Dialog.Actions>

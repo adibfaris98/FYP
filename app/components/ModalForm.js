@@ -166,8 +166,12 @@ export default function ModalForm({ fixture, navigation, tournamentID, setSubmit
                     }}>Match Finished</Button>
                     <Dialog.Actions>
                         <Button onPress={() => {
-                            hideDialog()
-                            submitUpdate()
+                            if(awayScore == "" || homeScore==""){
+                                alert("Field cannot be empty.")
+                            }else{
+                                hideDialog()
+                                submitUpdate()
+                            }
                         }}>Update</Button>
                         <Button onPress={hideDialog}>Cancel</Button>
                     </Dialog.Actions>
