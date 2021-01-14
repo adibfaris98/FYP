@@ -74,6 +74,7 @@ export default function EventDetails({ route, navigation }) {
                         </View>
                     </View>
                 </TriggeringView>
+
                 <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
                     <Caption style={styles.sectionContent}>{itemData.description}</Caption>
                     <View style={{ flexDirection: 'row' , marginTop:20}}>
@@ -101,20 +102,25 @@ export default function EventDetails({ route, navigation }) {
                     </View>
                 </View>
 
-                <View style={[styles.section,styles.sectionLarge,{justifyContent:'center'}]}>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        {tournaments && tournaments.map((value, i) => {
-                            return (
-                                <TournamentCard
-                                    value={value}
-                                    key={i}
-                                    onPress={() => {
-                                        navigation.navigate('TournamentDetailsEvent', { tournament: value, event: itemData })
-                                    }} />
-                            )
-                        })}
+                {tournaments ?
+                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                            {tournaments && tournaments.map((value, i) => {
+                                return (
+                                    <TournamentCard
+                                        value={value}
+                                        key={i}
+                                        onPress={() => {
+                                            navigation.navigate('TournamentDetailsEvent', { tournament: value, event: itemData })
+                                        }} />
+                                )
+                            })}
+                        </View>
+                    </View> :
+                    <View style={[styles.section, styles.sectionLarge, { justifyContent: 'center' }]}>
+                        <Caption style={{ textAlign: 'center', fontSize: 18 }}>Currently not Available</Caption>
                     </View>
-                </View>
+                }
 
                 {/* categories  */}
                 {/* <View style={styles.section}>

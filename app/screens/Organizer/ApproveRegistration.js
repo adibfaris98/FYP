@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DataTable } from 'react-native-paper'
+import { Caption, DataTable } from 'react-native-paper'
 import axios from 'axios'
 
 export default function ApproveRegistration({ route, navigation }) {
@@ -27,7 +27,7 @@ export default function ApproveRegistration({ route, navigation }) {
     }
 
     return (
-        <View style={{ flex: 1 , padding:5 }}>
+        <View style={{ flex: 1, padding: 5 }}>
             {pendingList ?
                 <DataTable>
                     <DataTable.Header>
@@ -50,7 +50,10 @@ export default function ApproveRegistration({ route, navigation }) {
                             </DataTable.Row>
                         </TouchableOpacity>
                     ))}</DataTable>
-                : <Text>Currently there is no application. Once manager submit registration form, the application will appear here for your approval.</Text>
+                :
+                <View style={{ justifyContent: 'center' }}>
+                    <Caption style={{ textAlign: 'center', fontSize: 16 }}>Currently there is no application. Once manager submit registration form, the application will appear here for your approval.</Caption>
+                </View>
             }
         </View>
     );
