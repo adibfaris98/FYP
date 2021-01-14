@@ -22,15 +22,6 @@ export default function EditProfileScreen({ navigation }) {
     const { photoURL, name, about, email, birthday, phoneNumber, country, gender, setPhotoURL, setName, setEmail, setAbout, setCountry, setPhoneNumber, setGender, setBirthday } = useContext(AuthContext)
     const user = auth().currentUser;
 
-    // const [image, setImage] = useState(userDetails.photoURL)
-    // const [name, setName] = useState(userDetails.name)
-    // const [about, setAbout] = useState(userDetails.about)
-    // const [email, setEmail] = useState(userDetails.email)
-    // const [country, setCountry] = useState(userDetails.country)
-    // const [gender, setGender] = useState(userDetails.gender)
-    // const [birthday, setBirthday] = useState(new Date(userDetails.birthday))
-    // const [phone, setPhone] = useState(userDetails.phoneNumber)
-
     const getUser = async () => {
         try {
             const response = await axios.get(`/user/${user.uid}`)
@@ -49,7 +40,6 @@ export default function EditProfileScreen({ navigation }) {
                     photoURL: photoURL,
                     name: name,
                     about: about,
-                    email: email,
                     country: country,
                     gender: gender,
                     birthday: birthday,
@@ -196,17 +186,6 @@ export default function EditProfileScreen({ navigation }) {
                                 style={styles.textInput}
                             />
                         </View>
-                        <View style={styles.action}>
-                            <FontAwesome name="envelope-o" size={20} />
-                            <TextInput
-                                value={email}
-                                placeholder="Email"
-                                onChangeText={(email) => setEmail(email)}
-                                placeholderTextColor="#666666"
-                                autoCorrect={false}
-                                style={styles.textInput}
-                            />
-                        </View>
 
                         <View style={styles.action}>
                             <Feather name="calendar" size={20} />
@@ -261,14 +240,20 @@ export default function EditProfileScreen({ navigation }) {
                         /> */}
 
                     </View>
-                    <TouchableOpacity style={styles.commandButton} onPress={updateDetails}>
+                    <TouchableOpacity style={styles.commandButton} onPress={() => {
+                        if (name == "" || photoURL == "" || name == "" || about == "" || country == "" || gender == "" || birthday == "" || phoneNumber == "") {
+                            alert("Field cannot be empty.")
+                        } else {
+                            updateDetails()
+                        }
+                    }}>
                         <Text style={styles.panelButtonTitle}>
                             Submit
                         </Text>
                     </TouchableOpacity>
                 </Animated.View>
             </ScrollView>
-        </View>
+        </View >
 
     )
 }
